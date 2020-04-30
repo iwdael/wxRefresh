@@ -1,0 +1,16 @@
+<movable-area class="movable__area">
+	<movable-view id="movable__view" class="movable__view" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" disabled="" style="height:calc(100vh + 1px +  {{refresherHeight}}px);" y="{{movableY}}px">
+		<scroll-view class="scroll__view" scroll-y bindscroll="onScrollChanged" bindscrolltolower="onScrollBottom">
+			<view class="__vertical">
+				<view id="refresher" class="__wrapper" opacity="{{movableY==0 ? 0: 1 }}">
+					<slot name="refresher"></slot>
+				</view>
+				<view id="header" class="__wrapper">
+					<slot name="header"></slot>
+				</view>
+				<slot name="content"></slot>
+				<slot name="footer"></slot>
+			</view>
+		</scroll-view>
+	</movable-view>
+</movable-area>

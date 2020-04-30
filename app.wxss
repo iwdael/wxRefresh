@@ -1,0 +1,16 @@
+/**app.wxss**/
+page {
+  height: 100%
+}
+
+.container {
+  height: 100%;
+  width: 100%;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}

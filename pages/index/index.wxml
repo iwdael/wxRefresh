@@ -1,0 +1,11 @@
+<view style="display:flex;flex-direction:column;">
+	<view style="height:1rpx;background:black;"></view>
+	<refresh>
+		<view slot="refresher" class="center" style="width:100%;height:120rpx;">
+			<square-flip />
+		</view>
+		<view slot="content" style="width:100%;display:flex;flex-direction:column;">
+			<view wx:for="{{list}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
+		</view>
+	</refresh>
+</view>

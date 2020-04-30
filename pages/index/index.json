@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "refresh": "/components/refresh/index",
+    "square-flip": "/components/square-flip/index"
+  }
+}
