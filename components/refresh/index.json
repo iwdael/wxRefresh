@@ -1,4 +1,7 @@
 {
+	"disableScroll": true,
 	"component": true,
-	"usingComponents": {}
+	"usingComponents": {
+		"default-refresher":"/components/refresher/default_refresher/refresher"
+	}
 }

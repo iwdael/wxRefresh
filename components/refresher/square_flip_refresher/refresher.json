@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "square-flip": "/components/animation/square-flip/index"
+  }
+}

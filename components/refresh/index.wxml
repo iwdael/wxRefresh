@@ -1,16 +1,32 @@
-<movable-area class="movable__area">
-	<movable-view id="movable__view" class="movable__view" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" disabled="" style="height:calc(100vh + 1px +  {{refresherHeight}}px);" y="{{movableY}}px">
-		<scroll-view class="scroll__view" scroll-y bindscroll="onScrollChanged" bindscrolltolower="onScrollBottom">
-			<view class="__vertical">
-				<view id="refresher" class="__wrapper" opacity="{{movableY==0 ? 0: 1 }}">
-					<slot name="refresher"></slot>
+<movable-area class="__movable_area">
+	<movable-view id="__movable_view" class="__movable_view" disabled="{{refreshStatus >= 3 || loadStatus >= 3}}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresherHeight}}px + {{2 * footerHeight}}px);" y="{{movableY}}px">
+		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{refreshStatus == 1 && loadStatus == 1}}" bindscroll="onScrollChanged">
+			<view id="__refresher" class="__wrapper" style="margin-top:{{refresherHeight}}px;">
+				<slot name="refresher"></slot>
+			</view>
+			<view id="__header" class="__wrapper">
+				<slot name="header"></slot>
+			</view>
+			<view style="height:{{pinHeight==0? 'auto' : pinHeight+'px'}};">
+				<view id="__pin" class="__wrapper" style="width:100%;{{pin? 'position:fixed;z-index:9;top:' + (2*refresherHeight) + 'px' :'' }}">
+					<slot name="pin"></slot>
 				</view>
-				<view id="header" class="__wrapper">
-					<slot name="header"></slot>
+			</view>
+
+			<view id="__header2" class="__wrapper">
+				<slot name="header2"></slot>
+			</view>
+			<view style="height:{{pinHeight2==0? 'auto' : pinHeight2 +'px'}};">
+				<view id="__pin2" class="__wrapper" style="width:100%;{{pin2? 'position:fixed;z-index:9;top:' + (2*refresherHeight+pinHeight) + 'px' :'' }}">
+					<slot name="pin2"></slot>
 				</view>
-				<slot name="content"></slot>
+			</view>
+
+			<slot name="content"></slot>
+			<view id="__footer" class="__wrapper" style="margin-bottom:{{footerHeight}}px;">
 				<slot name="footer"></slot>
 			</view>
+
 		</scroll-view>
 	</movable-view>
 </movable-area>

@@ -1,0 +1,3 @@
+<view class="__center" style="width:100%;height:120rpx;background:#666;">
+	<square-flip />
+</view>

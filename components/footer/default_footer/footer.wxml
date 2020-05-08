@@ -1,0 +1,26 @@
+<view class="scroll__refresh" style="padding: 20rpx 0;">
+	<view class="scroll__loading {{ loadStatus == 4 ? 'scroll__refresh--hidden' : '' }}">
+		<view wx:if="{{loadStatus == 1 || loadStatus == 2}}" class="{{loadStatus == 1 ? 'rotate' : ''}} arrow"></view>
+		<view wx:if="{{loadStatus == 3}}" class="loading">
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+			<view class="loading__item"></view>
+		</view>
+		<view class="text" wx:if="{{loadStatus == 1}}">上拉加载</view>
+		<view class="text" wx:elif="{{loadStatus == 2}}">松开加载</view>
+		<view class="text" wx:elif="{{loadStatus == 3}}">加载中...</view>
+	</view>
+
+	<view class="success {{loadStatus == 4 ? 'success--show' : ''}}" style="color:#999;">
+		<view class="info">加载成功</view>
+	</view>
+</view>
