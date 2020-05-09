@@ -1,6 +1,6 @@
 .__movable_area {
   width: 100%;
-  height: 100%; 
+  height: 100%;
   position: absolute;
   top: 0px;
   z-index: 0;
@@ -8,12 +8,13 @@
 
 .__movable_view {
   width: 100%;
-  height: 100%; 
+  height: 100%;
+  z-index: -1;
 }
 
 .__scroll_view {
   width: 100%;
-  height: 100%; 
+  height: 100%;
 }
 
 .__vertical {
@@ -25,5 +26,12 @@
 
 .__wrapper {
   width: auto;
-  height: auto; 
+  height: auto;
+}
+
+.__pin_wrapper {
+  width: 100;
+  height: auto;
+  background: #dedede;
+  z-index: 1;
 }
