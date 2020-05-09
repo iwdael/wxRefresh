@@ -21,8 +21,34 @@ Component({
 		},
 		load_success_height: {
 			type: Number,
+			value: '0px'
+		},
+		refresh_enable: {
+			type: Boolean,
+			value: true,
+		},
+		load_enable: {
+			type: Boolean,
+			value: true,
+		},
+		space_color: {
+			type: String,
+			value: "rgba(255, 255, 255, 0)"
+		},
+		top_size: {
+			type: Number,
+			value: 0
+		},
+		bottom_size: {
+			type: Number,
+			value: 0
+		},
+		cross_boundary_rebound_height: {
+			type: Number,
 			value: 0
 		}
+
+
 	},
 	options: {
 		multipleSlots: true,
@@ -47,6 +73,12 @@ Component({
 		//加载
 		footerHeight: 0,
 		loadStatus: 1, // 1: 上拉加载, 2: 松开加载, 3: 加载中, 4: 加载完成
+
+		//other 
+		overflow: false,
+		contentHeight: 0,
+		scrollHeight: 0,
+		spaceHeight: 0
 	},
 	methods: {
 		init() {
@@ -56,6 +88,12 @@ Component({
 				this.setData({
 					refresherHeight: this.data.refresherHeight,
 					movableY: -2 * this.data.refresherHeight,
+					animation: ''
+				})
+				setTimeout(() => {
+					this.setData({
+						animation: 'true'
+					}, 50)
 				})
 			}).exec();
 
@@ -100,23 +138,66 @@ Component({
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__scroll_view").boundingClientRect((__scroll_view) => {
-
 				console.log('scrollviewHeight -- ', __scroll_view.height)
-
+				this.data.scrollHeight = __scroll_view.height
 			}).exec();
+			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
+				console.log('__contentHeight -- ', __content.height)
+				this.data.contentHeight = __content.height
+				var diff = this.data.scrollHeight - this.data.contentHeight - this.data.pinHeight - this.data.pinHeight2 - this.data.headerHeight - this.data.headerHeight2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+
+				if (diff < 0) {
+					this.data.overflow = true
+					this.setData({
+						overflow: true
+					})
+				} else {
+					this.setData({
+						spaceHeight: diff
+					})
+					this.triggerEvent("load-status", {
+						'status': 0
+					}, {})
+				}
+
+				if (this.properties.cross_boundary_rebound_height > 0 && this.data.footerHeight == 0 && this.data.headerHeight == 0 && !this.properties.refresh_enable && !this.properties.load_enable) {
+					this.data.refresherHeight = this.rpx2px(this.properties.cross_boundary_rebound_height) / 2
+					this.data.footerHeight = this.rpx2px(this.properties.cross_boundary_rebound_height) / 2
+					this.setData({
+						refresherHeight: this.data.refresherHeight,
+						footerHeight: this.data.footerHeight,
+						movableY: -2 * this.data.refresherHeight,
+						animation: ''
+					})
+					setTimeout(() => {
+						this.setData({
+							animation: 'true'
+						}, 50)
+					})
+
+
+				}
+				console.log('overflow -- ', this.data.overflow)
+			}).exec();
+			this.triggerEvent("refresh-status", {
+				'status': this.properties.refresh_enable ? 1 : 0
+			}, {})
+			this.triggerEvent("load-status", {
+				'status': this.properties.load_enable ? 1 : 0
+			}, {})
 		},
 		onMovableChange(e) {
 			// console.log('onMovableChange', e.detail.y)
 			if (this.data.refreshStatus > 2 || this.data.loadStatus > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
-			if (y >= -this.data.refresherHeight) {
+			if (y >= -this.data.refresherHeight && this.properties.refresh_enable) {
 				if (this.data.refreshStatus != 2) {
 					this.data.refreshStatus = 2
 					this.triggerEvent("refresh-status", {
 						'status': this.data.refreshStatus
 					}, {})
 				}
-			} else if (y >= -2 * this.data.refresherHeight && y < -this.data.refresherHeight) {
+			} else if (y >= -2 * this.data.refresherHeight && y < -this.data.refresherHeight && this.properties.refresh_enable) {
 				if (this.data.refreshStatus != 1) {
 					this.data.refreshStatus = 1
 					this.triggerEvent("refresh-status", {
@@ -124,14 +205,14 @@ Component({
 					}, {})
 				}
 
-			} else if (y >= -2 * this.data.refresherHeight - this.data.footerHeight && y < -2 * this.data.refresherHeight) {
+			} else if (y >= -2 * this.data.refresherHeight - this.data.footerHeight && y < -2 * this.data.refresherHeight && this.data.overflow && this.properties.load_enable) {
 				if (this.data.loadStatus != 1) {
 					this.data.loadStatus = 1
 					this.triggerEvent("load-status", {
 						'status': this.data.loadStatus
 					}, {})
 				}
-			} else {
+			} else if (this.data.overflow && this.properties.load_enable) {
 				if (this.data.loadStatus != 2) {
 					this.data.loadStatus = 2
 					this.triggerEvent("load-status", {
@@ -228,7 +309,19 @@ Component({
 		},
 
 		refreshObserver() {
+			if (this.properties.refresh && !this.properties.load) {
+				setTimeout(() => {
+					this.setData({
+						movableY: -this.data.refresherHeight + 20
+					})
+					setTimeout(() => {
+						this.onMovableTouchEnd(null)
+					}, 500)
+				}, 500)
+				return
+			}
 			if (this.properties.refresh) return
+
 			if (this.data.refresh_success_height != 0) {
 				this.data.refreshStatus = 4
 				this.triggerEvent("refresh-status", {
@@ -242,7 +335,6 @@ Component({
 				setTimeout(() => {
 					this.setData({
 						movableY: -2 * this.data.refresherHeight,
-
 					})
 					setTimeout(() => {
 						this.data.refreshStatus = 1
@@ -252,7 +344,7 @@ Component({
 						this.setData({
 							refreshStatus: this.data.refreshStatus
 						})
-					}, 500)
+					}, 1000)
 				}, this.properties.duration)
 			} else {
 				this.data.refreshStatus = 1
@@ -291,7 +383,7 @@ Component({
 						this.setData({
 							loadStatus: this.data.loadStatus
 						})
-					}, 500)
+					}, 1000)
 				}, this.properties.duration)
 			} else {
 				this.data.loadStatus = 1

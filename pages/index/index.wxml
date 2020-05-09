@@ -1,17 +1,21 @@
 <view style="display:flex;flex-direction:column;">
-	<refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh_success_height="70" bind:load="onLoad" load="{{load}}" bind:load-status="onLoadStatus" load_success_height="70" bind:pin="onPinChange">
+	<view style="width:100%;height:300rpx;background:rgba(99, 252, 99, 0.521);z-index:1;"></view>
+	<refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh_success_height="70" bind:load="onLoad" load="{{load}}" bind:load-status="onLoadStatus" load_success_height="70" bind:pin="onPinChange" space_color="#dedede" top_size="300" bottom_size="300">
 		<default-refresher slot="refresher" status="{{refreshStatus}}" />
 		<view slot="header" style="width:100%;display:flex;flex-direction:column;">
 			<view wx:for="{{list1}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
 		</view>
-		<view slot="pin" style="width:100%;height:100rpx;background:black;"></view>
+		<view slot="pin" style="width:100vw;height:100rpx;background:black;"></view>
 		<view slot="header2" style="width:100%;display:flex;flex-direction:column;">
 			<view wx:for="{{list3}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
 		</view>
-		<view slot="pin2" style="width:100%;height:100rpx;background:yellow;"></view>
+		<view slot="pin2" style="width:100vw;height:100rpx;background:yellow;"></view>
 		<view slot="content" style="width:100%;display:flex;flex-direction:column;">
 			<view wx:for="{{list2}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
 		</view>
+		<!-- <view slot="content" style="width:100%;height:1000px;background:red;"> -->
+		<!-- </view> -->
 		<default-footer slot="footer" status="{{loadStatus}}" />
 	</refresh>
+	<view style="width:100%;height:300rpx;background:rgba(99, 252, 99, 0.521);position:absolute;bottom:0px;"></view>
 </view>

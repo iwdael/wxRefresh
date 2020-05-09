@@ -1,32 +1,39 @@
-<movable-area class="__movable_area">
-	<movable-view id="__movable_view" class="__movable_view" disabled="{{refreshStatus >= 3 || loadStatus >= 3}}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresherHeight}}px + {{2 * footerHeight}}px);" y="{{movableY}}px">
-		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{refreshStatus == 1 && loadStatus == 1}}" bindscroll="onScrollChanged">
-			<view id="__refresher" class="__wrapper" style="margin-top:{{refresherHeight}}px;">
-				<slot name="refresher"></slot>
-			</view>
-			<view id="__header" class="__wrapper">
-				<slot name="header"></slot>
-			</view>
-			<view style="height:{{pinHeight==0? 'auto' : pinHeight+'px'}};">
-				<view id="__pin" class="__wrapper" style="width:100%;{{pin? 'position:fixed;z-index:9;top:' + (2*refresherHeight) + 'px' :'' }}">
-					<slot name="pin"></slot>
-				</view>
-			</view>
+ <movable-area class="__movable_area">
+ 	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refreshStatus >= 3 || loadStatus >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresherHeight}}px + {{2 * footerHeight}}px);" y="{{movableY}}px" animation="{{animation}}">
+ 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{(refreshStatus == 1 && loadStatus == 1)? 'true' : ''}}" bindscroll="onScrollChanged">
+ 			<view style="height:{{top_size}}rpx" />
+ 			<view id="__refresher_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * refresherHeight+ 'px' : refresherHeight +'px' }};" />
+ 			<view id="__refresher" class="__wrapper">
+ 				<slot name="refresher"></slot>
+ 			</view>
 
-			<view id="__header2" class="__wrapper">
-				<slot name="header2"></slot>
-			</view>
-			<view style="height:{{pinHeight2==0? 'auto' : pinHeight2 +'px'}};">
-				<view id="__pin2" class="__wrapper" style="width:100%;{{pin2? 'position:fixed;z-index:9;top:' + (2*refresherHeight+pinHeight) + 'px' :'' }}">
-					<slot name="pin2"></slot>
-				</view>
-			</view>
+ 			<view id="__header" class="__wrapper">
+ 				<slot name="header"></slot>
+ 			</view>
+ 			<view style="height:{{pinHeight==0? 'auto' : pinHeight+'px'}};">
+ 				<view id="__pin" class="__wrapper" style="width:100%;{{pin? 'position:fixed;z-index:9;margin-top:'+top_size+'rpx;top:' + (2*refresherHeight) + 'px' :'' }};">
+ 					<slot name="pin"></slot>
+ 				</view>
+ 			</view>
 
-			<slot name="content"></slot>
-			<view id="__footer" class="__wrapper" style="margin-bottom:{{footerHeight}}px;">
-				<slot name="footer"></slot>
-			</view>
+ 			<view id="__header2" class="__wrapper">
+ 				<slot name="header2"></slot>
+ 			</view>
+ 			<view style="height:{{pinHeight2==0? 'auto' : pinHeight2 +'px'}};">
+ 				<view id="__pin2" class="__wrapper" style="width:100%;{{pin2? 'position:fixed;z-index:9;margin-top:'+top_size+'rpx;top:' + (2*refresherHeight+pinHeight) + 'px' :'' }}">
+ 					<slot name="pin2"></slot>
+ 				</view>
+ 			</view>
+ 			<view id="__content" class="__vertical">
+ 				<slot name="content"></slot>
+ 			</view>
+ 			<view id="__content_space" wx:if="{{!overflow}}" style="width:100%;height:{{spaceHeight}}px;background:{{space_color}}" />
 
-		</scroll-view>
-	</movable-view>
-</movable-area>
+ 			<view id="__footer" class="__wrapper">
+ 				<slot name="footer"></slot>
+ 			</view>
+ 			<view id="__footer_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * footerHeight+ 'px' : footerHeight +'px' }};" />
+ 			<view style="height:{{bottom_size}}rpx" />
+ 		</scroll-view>
+ 	</movable-view>
+ </movable-area>

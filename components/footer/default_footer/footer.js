@@ -16,7 +16,7 @@
 
    methods: {
      statusObserver() {
-       console.log('load statusObserver---', this.properties.status);
+      //  console.log('load statusObserver---', this.properties.status);
 
        this.setData({
         loadStatus: this.properties.status,

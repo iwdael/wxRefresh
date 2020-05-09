@@ -3,6 +3,9 @@ Page({
     list1: [{}, {}, {}],
     list2: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     list3: [{}, {}, {}],
+    // list1: [],
+    // list2: [],
+    // list3: [],
     refresh: false,
     load: false
     // list:[]
@@ -36,5 +39,10 @@ Page({
   },
   onPinChange(e) {
     console.log("pin --- ", e.detail.progress)
+  },
+  onReady() {
+    this.setData({
+      "refresh": true
+    })
   }
 })

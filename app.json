@@ -1,7 +1,6 @@
 {
-  "pages": [
-    "pages/index/index",
-    "pages/logs/logs"
+  "pages": [ 
+    "pages/cross_boundary_rebound_height/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

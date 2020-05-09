@@ -1,0 +1,9 @@
+<view style="display:flex;flex-direction:column;">
+	<view style="width:100%;height:170rpx;background:rgba(99, 252, 99, 0.521);z-index:1;"></view>
+	<refresh refresh_enable="{{false}}" load_enable="{{false}}" space_color="#fafafa" cross_boundary_rebound_height="140" top_size="170">
+		<view slot="content" style="width:100%;display:flex;flex-direction:column;">
+			<view wx:for="{{list2}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
+		</view>
+	</refresh>
+
+</view>
