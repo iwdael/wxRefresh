@@ -1,7 +1,7 @@
  <movable-area class="__movable_area">
  	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refreshStatus >= 3 || loadStatus >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresherHeight}}px + {{2 * footerHeight}}px);" y="{{movableY}}px" animation="{{animation}}">
- 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{(refreshStatus == 1 && loadStatus == 1)? 'true' : ''}}" bindscroll="onScrollChanged">
- 			<view style="height:{{top_size}}rpx" />
+ 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{(refreshStatus == 1 && loadStatus == 1)? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scroll_height}}">
+ 			<view style="height:{{top_size}}rpx" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" />
  			<view id="__refresher_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * refresherHeight+ 'px' : refresherHeight +'px' }};" />
  			<view id="__refresher" class="__wrapper">
  				<slot name="refresher"></slot>

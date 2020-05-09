@@ -46,6 +46,10 @@ Component({
 		cross_boundary_rebound_height: {
 			type: Number,
 			value: 0
+		},
+		scroll_height: {
+			type: String,
+			value: '0px'
 		}
 
 
@@ -84,7 +88,7 @@ Component({
 		init() {
 			this.createSelectorQuery().select("#__refresher").boundingClientRect((__refresher) => {
 				this.data.refresherHeight = __refresher.height
-				console.log('refresherHeight -- ', this.data.refresherHeight)
+
 				this.setData({
 					refresherHeight: this.data.refresherHeight,
 					movableY: -2 * this.data.refresherHeight,
@@ -99,16 +103,16 @@ Component({
 
 			this.createSelectorQuery().select("#__header").boundingClientRect((__header) => {
 				this.data.headerHeight = __header.height
-				console.log('headerHeight -- ', this.data.headerHeight)
+
 			}).exec();
 			this.createSelectorQuery().select("#__header2").boundingClientRect((__header) => {
 				this.data.headerHeight2 = __header.height
-				console.log('headerHeight2 -- ', this.data.headerHeight2)
+
 			}).exec();
 
 			this.createSelectorQuery().select("#__pin").boundingClientRect((__pin) => {
 				this.data.pinHeight = __pin.height
-				console.log('pinHeight -- ', this.data.pinHeight)
+
 				this.setData({
 					pinHeight: this.data.pinHeight,
 				})
@@ -116,7 +120,7 @@ Component({
 
 			this.createSelectorQuery().select("#__pin2").boundingClientRect((__pin) => {
 				this.data.pinHeight2 = __pin.height
-				console.log('pinHeight2 -- ', this.data.pinHeight2)
+
 				this.setData({
 					pinHeight2: this.data.pinHeight2,
 				})
@@ -124,7 +128,7 @@ Component({
 
 			this.createSelectorQuery().select("#__movable_view").boundingClientRect((__movable_view) => {
 				this.data.movableHeight = __movable_view.height
-				console.log('movableHeight -- ', this.data.movableHeight)
+
 				this.setData({
 					movableHeight: this.data.movableHeight,
 				})
@@ -132,17 +136,17 @@ Component({
 
 			this.createSelectorQuery().select("#__footer").boundingClientRect((__footer) => {
 				this.data.footerHeight = __footer.height
-				console.log('footerHeight -- ', this.data.footerHeight)
+
 				this.setData({
 					footerHeight: this.data.footerHeight,
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__scroll_view").boundingClientRect((__scroll_view) => {
-				console.log('scrollviewHeight -- ', __scroll_view.height)
+
 				this.data.scrollHeight = __scroll_view.height
 			}).exec();
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
-				console.log('__contentHeight -- ', __content.height)
+
 				this.data.contentHeight = __content.height
 				var diff = this.data.scrollHeight - this.data.contentHeight - this.data.pinHeight - this.data.pinHeight2 - this.data.headerHeight - this.data.headerHeight2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
 
@@ -175,9 +179,19 @@ Component({
 						}, 50)
 					})
 
-
 				}
-				console.log('overflow -- ', this.data.overflow)
+				var info = {
+					"refresher_height": this.data.refresherHeight,
+					"header_height": this.data.headerHeight,
+					"pin_height": this.data.pinHeight,
+					"header_height_2": this.data.headerHeight2,
+					"scroll_height": this.data.scrollHeight,
+					"content_height": this.data.contentHeight,
+					"footer_height": this.data.footerHeight,
+					"overflow": this.data.overflow
+				}
+				console.log(info)
+				this.triggerEvent("info", info, {})
 			}).exec();
 			this.triggerEvent("refresh-status", {
 				'status': this.properties.refresh_enable ? 1 : 0
@@ -188,6 +202,7 @@ Component({
 		},
 		onMovableChange(e) {
 			// console.log('onMovableChange', e.detail.y)
+			this.triggerEvent("drag", e.detail, {})
 			if (this.data.refreshStatus > 2 || this.data.loadStatus > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
 			if (y >= -this.data.refresherHeight && this.properties.refresh_enable) {
@@ -222,6 +237,7 @@ Component({
 			}
 		},
 		onMovableTouchEnd(e) {
+			this.triggerEvent("drag_end")
 			if (this.data.refreshStatus > 2 || this.data.loadStatus > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			// console.log(e)
 			if (this.data.refreshStatus == 1 && this.data.loadStatus == 1) {
@@ -254,7 +270,8 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
-			console.log('scroll --- ', top);
+			this.triggerEvent("scroll", e.detail, {})
+			// console.log('scroll --- ', e.detail);
 			if (this.data.pinHeight != 0) {
 
 				if (top >= this.data.headerHeight) {
@@ -395,6 +412,12 @@ Component({
 					loadStatus: this.data.loadStatus
 				})
 			}
+		},
+		onScrollBottom(e) {
+			this.triggerEvent("bottom");
+		},
+		onScrollTop(e) {
+			this.triggerEvent("top");
 		},
 		rpx2px(_rpx) {
 			return wx.getSystemInfoSync().screenWidth / 750.00 * _rpx
