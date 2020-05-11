@@ -425,7 +425,7 @@ Component({
 		reCalcOverflow() {
 			if (!this.data.overflow) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
-					console.log('______content_height__________', __content)
+ 
 					this.data.content_height = __content.height
 					var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
 
@@ -441,19 +441,7 @@ Component({
 						this.triggerEvent("load-status", {
 							'status': 0
 						}, {})
-					}
-					var info = {
-						"refresher_height": this.data.refresher_height,
-						"header_height": this.data.header_height,
-						"pin_height": this.data.pin_height,
-						"header_height_2": this.data.header_height_2,
-						"scroll_height": this.data.scroll_height,
-						"content_height": this.data.content_height,
-						"footer_height": this.data.footer_height,
-						"overflow": this.data.overflow
-					}
-					console.log(info)
-					this.triggerEvent("info", info, {})
+					} 
 				}).exec()
 			}
 		},
