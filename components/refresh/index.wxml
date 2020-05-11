@@ -12,7 +12,7 @@
  				<slot name="header"></slot>
  			</view>
  			<view style="height:{{pin_height==0? 'auto' : pin_height+'px'}};">
- 				<view id="__pin" class="__wrapper" style="width:100%;{{pin? 'position:fixed;z-index:9;margin-top:'+top_size+'rpx;top:' + (2*refresher_height) + 'px' :'' }};">
+ 				<view wx:if="{{!pin}}" id="__pin" class="__wrapper">
  					<slot name="pin"></slot>
  				</view>
  			</view>
@@ -21,7 +21,7 @@
  				<slot name="header_2"></slot>
  			</view>
  			<view style="height:{{pin_height_2==0? 'auto' : pin_height_2 +'px'}};">
- 				<view id="__pin_2" class="__wrapper" style="width:100%;{{pin_2? 'position:fixed;z-index:9;margin-top:'+top_size+'rpx;top:' + (2*refresher_height+pin_height) + 'px' :'' }}">
+ 				<view wx:if="{{!pin_2}}" id="__pin_2" class="__wrapper">
  					<slot name="pin_2"></slot>
  				</view>
  			</view>
@@ -37,5 +37,8 @@
  			<view style="height:{{bottom_size}}rpx" />
  		</scroll-view>
  	</movable-view>
- 	<view id="__pin_wrapper" class="__pin_wrapper" ></view>
+ 	<view id="__pin_wrapper" class="__pin_wrapper" style="margin-top:{{top_size}}rpx;">
+ 		<slot wx:if="{{pin}}" name="pin"></slot>
+ 		<slot wx:if="{{pin_2}}" name="pin_2"></slot>
+ 	</view>
  </movable-area>

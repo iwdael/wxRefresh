@@ -107,7 +107,6 @@ Component({
 			}).exec();
 			this.createSelectorQuery().select("#__header_2").boundingClientRect((__header) => {
 				this.data.header_height_2 = __header.height
-
 			}).exec();
 
 			this.createSelectorQuery().select("#__pin").boundingClientRect((__pin) => {
@@ -193,6 +192,8 @@ Component({
 				console.log(info)
 				this.triggerEvent("info", info, {})
 			}).exec();
+
+
 			this.triggerEvent("refresh-status", {
 				'status': this.properties.refresh_enable ? 1 : 0
 			}, {})

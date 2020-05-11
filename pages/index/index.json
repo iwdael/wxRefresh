@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "refresh": "/components/refresh/index", 
+    "refresh": "/components/refresh/index",   
     "default-refresher":"/components/refresher/default_refresher/refresher",
     "default-footer" :"/components/footer/default_footer/footer"
   },

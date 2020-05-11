@@ -1,5 +1,6 @@
 {
-  "pages": [ 
+  "pages": [
+    "pages/index/index",
     "pages/cross_boundary_rebound_height/index"
   ],
   "window": {

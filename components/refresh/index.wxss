@@ -31,7 +31,6 @@
 
 .__pin_wrapper {
   width: 100;
-  height: auto;
-  background: #dedede;
-  z-index: 1;
+  height: auto; 
+  z-index: 1; 
 }
