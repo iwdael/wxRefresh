@@ -37,21 +37,27 @@ Component({
 		},
 		top_size: {
 			type: Number,
-			value: 0
+			value: 0,
+			observer: "topSizeObserver"
 		},
 		bottom_size: {
 			type: Number,
-			value: 0
+			value: 0,
+			observer: "bottomSizeObserver"
 		},
 		cross_boundary_rebound_height: {
 			type: Number,
 			value: 0
 		},
-		scroll_height: {
+		scroll_distance: {
 			type: String,
 			value: '0px'
+		},
+		calc_page: {
+			value: false,
+			type: Boolean,
+			observer: "calcPageObserver"
 		}
-
 
 	},
 	options: {
@@ -79,10 +85,11 @@ Component({
 		load_status: 1, // 1: 上拉加载, 2: 松开加载, 3: 加载中, 4: 加载完成
 
 		//other 
-		overflow: false,
+		over_page: false,
 		content_height: 0,
 		scroll_height: 0,
-		space_height: 0
+		space_height: 0,
+		current_scroll: 0,
 	},
 	methods: {
 		init() {
@@ -150,9 +157,9 @@ Component({
 				var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
 
 				if (diff < 0) {
-					this.data.overflow = true
+					this.data.over_page = true
 					this.setData({
-						overflow: true
+						over_page: true
 					})
 				} else {
 					this.setData({
@@ -187,9 +194,9 @@ Component({
 					"scroll_height": this.data.scroll_height,
 					"content_height": this.data.content_height,
 					"footer_height": this.data.footer_height,
-					"overflow": this.data.overflow
+					"over_page": this.data.over_page
 				}
-				console.log(info)
+				// console.log(info)
 				this.triggerEvent("info", info, {})
 			}).exec();
 
@@ -202,7 +209,13 @@ Component({
 			}, {})
 		},
 		onMovableChange(e) {
-			// console.log('onMovableChange', e.detail.y)
+
+			this.onScrollChanged({
+				detail: {
+					scrollTop: this.data.current_scroll - (this.data.refresher_height + this.data.footer_height) - e.detail.y,
+					manual: true,
+				}
+			})
 			this.triggerEvent("drag", e.detail, {})
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
@@ -221,14 +234,14 @@ Component({
 					}, {})
 				}
 
-			} else if (y >= -2 * this.data.refresher_height - this.data.footer_height && y < -2 * this.data.refresher_height && this.data.overflow && this.properties.load_enable) {
+			} else if (y >= -2 * this.data.refresher_height - this.data.footer_height && y < -2 * this.data.refresher_height && this.data.over_page && this.properties.load_enable) {
 				if (this.data.load_status != 1) {
 					this.data.load_status = 1
 					this.triggerEvent("load-status", {
 						'status': this.data.load_status
 					}, {})
 				}
-			} else if (this.data.overflow && this.properties.load_enable) {
+			} else if (this.data.over_page && this.properties.load_enable) {
 				if (this.data.load_status != 2) {
 					this.data.load_status = 2
 					this.triggerEvent("load-status", {
@@ -271,10 +284,13 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
-			this.triggerEvent("scroll", e.detail, {})
-			// console.log('scroll --- ', e.detail);
+			if (e.detail.manual == null) {
+				this.data.current_scroll = top
+			}
+			this.triggerEvent("scroll", {
+				scroll_distance: top
+			}, {})
 			if (this.data.pin_height != 0) {
-
 				if (top >= this.data.header_height) {
 					if (!this.data.pin) {
 						this.triggerEvent("pin", {
@@ -327,7 +343,7 @@ Component({
 		},
 
 		refreshObserver() {
-			this.reCalcOverflow()
+			this.calcPage(true)
 			if (this.properties.refresh && !this.properties.load) {
 				setTimeout(() => {
 					this.setData({
@@ -376,10 +392,9 @@ Component({
 				})
 			}
 
-
 		},
 		loadObserver() {
-			this.reCalcOverflow()
+			this.calcPage(false)
 			if (this.properties.load) return
 			if (this.data.load_success_height != 0) {
 				this.data.load_status = 4
@@ -416,32 +431,56 @@ Component({
 				})
 			}
 		},
+		calcPageObserver() {
+			if (this.properties.calc_page)
+				this.calcPage(true)
+			this.properties.calc_page = false
+		},
+		topSizeObserver() {
+			this.calcPage(true)
+		},
+		bottomSizeObserver() {
+			this.calcPage(true)
+		},
 		onScrollBottom(e) {
 			this.triggerEvent("bottom");
 		},
 		onScrollTop(e) {
 			this.triggerEvent("top");
 		},
-		reCalcOverflow() {
-			if (!this.data.overflow) {
+
+		calcPage(_is_refresh) {
+			if (!this.data.over_page || _is_refresh) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
- 
 					this.data.content_height = __content.height
 					var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
-
+					this.data.space_height = diff
 					if (diff < 0) {
-						this.data.overflow = true
+						this.data.over_page = true
 						this.setData({
-							overflow: true
+							over_page: true
 						})
 					} else {
+						this.data.over_page = false
 						this.setData({
 							space_height: diff
 						})
 						this.triggerEvent("load-status", {
 							'status': 0
 						}, {})
-					} 
+					}
+					// var info = {
+					// 	"refresher_height": this.data.refresher_height,
+					// 	"header_height": this.data.header_height,
+					// 	"pin_height": this.data.pin_height,
+					// 	"header_height_2": this.data.header_height_2,
+					// 	"scroll_height": this.data.scroll_height,
+					// 	"content_height": this.data.content_height,
+					// 	"footer_height": this.data.footer_height,
+					// 	"over_page": this.data.over_page,
+					// 	"space_height": this.data.space_height
+					// }
+					// console.log(info)
 				}).exec()
 			}
 		},

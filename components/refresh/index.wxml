@@ -1,8 +1,8 @@
  <movable-area class="__movable_area">
 
  	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_status >= 3 || load_status >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresher_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
- 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{(refresh_status == 1 && load_status == 1)? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scroll_height}}">
- 			<view style="height:{{top_size}}rpx" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" />
+ 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{(refresh_status == 1 && load_status == 1)? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scroll_distance}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop">
+ 			<view style="height:{{top_size}}rpx" />
  			<view id="__refresher_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * refresher_height+ 'px' : refresher_height +'px' }};" />
  			<view id="__refresher" class="__wrapper">
  				<slot name="refresher"></slot>
@@ -28,7 +28,7 @@
  			<view id="__content" class="__vertical">
  				<slot name="content"></slot>
  			</view>
- 			<view id="__content_space" wx:if="{{!overflow}}" style="width:100%;height:{{space_height}}px;background:{{space_color}}" />
+ 			<view id="__content_space" wx:if="{{!over_page}}" style="width:100%;height:{{space_height}}px;background:{{space_color}}" />
 
  			<view id="__footer" class="__wrapper">
  				<slot name="footer"></slot>
