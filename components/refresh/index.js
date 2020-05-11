@@ -327,6 +327,7 @@ Component({
 		},
 
 		refreshObserver() {
+			this.reCalcOverflow()
 			if (this.properties.refresh && !this.properties.load) {
 				setTimeout(() => {
 					this.setData({
@@ -378,6 +379,7 @@ Component({
 
 		},
 		loadObserver() {
+			this.reCalcOverflow()
 			if (this.properties.load) return
 			if (this.data.load_success_height != 0) {
 				this.data.load_status = 4
@@ -419,6 +421,41 @@ Component({
 		},
 		onScrollTop(e) {
 			this.triggerEvent("top");
+		},
+		reCalcOverflow() {
+			if (!this.data.overflow) {
+				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
+					console.log('______content_height__________', __content)
+					this.data.content_height = __content.height
+					var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+
+					if (diff < 0) {
+						this.data.overflow = true
+						this.setData({
+							overflow: true
+						})
+					} else {
+						this.setData({
+							space_height: diff
+						})
+						this.triggerEvent("load-status", {
+							'status': 0
+						}, {})
+					}
+					var info = {
+						"refresher_height": this.data.refresher_height,
+						"header_height": this.data.header_height,
+						"pin_height": this.data.pin_height,
+						"header_height_2": this.data.header_height_2,
+						"scroll_height": this.data.scroll_height,
+						"content_height": this.data.content_height,
+						"footer_height": this.data.footer_height,
+						"overflow": this.data.overflow
+					}
+					console.log(info)
+					this.triggerEvent("info", info, {})
+				}).exec()
+			}
 		},
 		rpx2px(_rpx) {
 			return wx.getSystemInfoSync().screenWidth / 750.00 * _rpx
