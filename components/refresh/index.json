@@ -2,6 +2,6 @@
 	"disableScroll": true,
 	"component": true,
 	"usingComponents": {
-		"default-refresher":"/components/refresher/default_refresher/refresher"
+		"sticky":"./sticky/index"
 	}
 }

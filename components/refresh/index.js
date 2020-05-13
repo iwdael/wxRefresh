@@ -67,15 +67,15 @@ Component({
 		multipleSlots: true,
 	},
 	data: {
-		//pin
+		//sticky
 		header_height: 0,
-		pin_height: 0,
-		pin: false,
+		sticky_height: 0,
+		sticky: false,
 
-		//pin_2
+		//sticky_2
 		header_height_2: 0,
-		pin_height_2: 0,
-		pin_2: false,
+		sticky_height_2: 0,
+		sticky_2: false,
 
 		movable_height: 0,
 		//刷新  
@@ -94,6 +94,7 @@ Component({
 		space_height: 0, //填充到一页的高度
 		current_scroll: 0, //当前滚动的位置
 		empty_height: 0, // content 为空 展示的高度
+		top_size_px: 0,
 	},
 	methods: {
 		init() {
@@ -120,18 +121,19 @@ Component({
 				this.data.header_height_2 = __header.height
 			}).exec();
 
-			this.createSelectorQuery().select("#__pin").boundingClientRect((__pin) => {
-				this.data.pin_height = __pin.height
+			this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
+				this.data.sticky_height = __sticky.height
 				this.setData({
-					pin_height: this.data.pin_height,
+					sticky_height: this.data.sticky_height,
+					top_size_px: this.rpx2px(this.properties.top_size)
 				})
 			}).exec();
 
-			this.createSelectorQuery().select("#__pin_2").boundingClientRect((__pin) => {
-				this.data.pin_height_2 = __pin.height
-
+			this.createSelectorQuery().select("#__sticky_2").boundingClientRect((__sticky) => {
+				this.data.sticky_height_2 = __sticky.height
 				this.setData({
-					pin_height_2: this.data.pin_height_2,
+					sticky_height_2: this.data.sticky_height_2,
+					top_size_px: this.rpx2px(this.properties.top_size)
 				})
 			}).exec();
 
@@ -162,7 +164,7 @@ Component({
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 
 				this.data.content_height = __content.height
-				var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
 				this.data.space_height = diff
 				if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 					this.data.space_height = this.data.space_height - this.data.empty_height
@@ -203,7 +205,7 @@ Component({
 				var info = {
 					"refresher_height": this.data.refresher_height,
 					"header_height": this.data.header_height,
-					"pin_height": this.data.pin_height,
+					"sticky_height": this.data.sticky_height,
 					"header_height_2": this.data.header_height_2,
 					"scroll_height": this.data.scroll_height,
 					"content_height": this.data.content_height,
@@ -212,7 +214,7 @@ Component({
 					"empty_height": this.data.empty_height,
 					"space_height": this.data.space_height,
 				}
-				console.log(info)
+				// console.log(info)
 				this.triggerEvent("info", info, {})
 			}).exec();
 
@@ -334,66 +336,52 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
-			console.log('scroll top ----- ', top);
-
 			if (e.detail.manual == null) {
 				this.data.current_scroll = top
 			}
 			this.triggerEvent("scroll", {
 				scroll_distance: top
 			}, {})
-			if (this.data.pin_height != 0) {
-				if (top >= this.data.header_height) {
-					if (!this.data.pin) {
-						this.triggerEvent("pin", {
-							"progress": 1
-						}, {})
-						this.data.pin = true
-						this.setData({
-							pin: this.data.pin
-						})
-					}
-				} else {
+			if (this.data.sticky_height != 0) {
+				if (this.data.sticky) {} else {
 					var progress = top * 1.00 / this.data.header_height
-					this.triggerEvent("pin", {
+					this.triggerEvent("sticky", {
+						"id": "__sticky",
 						"progress": progress
 					}, {})
-					if (this.data.pin) {
-						this.data.pin = false
-						this.setData({
-							pin: this.data.pin
-						})
-					}
 				}
 			}
-
-			if (this.data.pin_height_2 != 0) {
-
-				if (top >= this.data.header_height + this.data.header_height_2) {
-					if (!this.data.pin_2) {
-						this.triggerEvent("pin_2", {
-							"progress": 1.00
-						}, {})
-						this.data.pin_2 = true
-						this.setData({
-							pin_2: this.data.pin_2
-						})
-					}
-				} else {
+			if (this.data.sticky_height_2 != 0) {
+				if (this.data.sticky_2) {} else {
 					var progress = top * 1.00 / (this.data.header_height + this.data.header_height_2)
-					this.triggerEvent("pin_2", {
+					this.triggerEvent("sticky", {
+						"id": "__sticky_2",
 						"progress": progress
 					}, {})
-					if (this.data.pin_2) {
-						this.data.pin_2 = false
-						this.setData({
-							pin_2: this.data.pin_2
-						})
-					}
 				}
 			}
 		},
-
+		onPinSticky(e) {
+			var id = e.currentTarget.id
+			var sticky = e.detail.sticky
+			if (sticky) {
+				this.triggerEvent("sticky", {
+					"id": id,
+					"progress": 1
+				}, {})
+			}
+			if (id == '__sticky' && this.data.sticky != sticky) {
+				this.data.sticky = sticky
+				this.setData({
+					sticky: this.data.sticky
+				})
+			} else if (id == '__sticky_2' && this.data.sticky_2 != sticky) {
+				this.data.sticky_2 = sticky
+				this.setData({
+					sticky_2: this.data.sticky_2
+				})
+			}
+		},
 		refreshObserver() {
 			this.calcPage(true)
 			if (this.properties.refresh == 100 && !this.properties.load) {
@@ -588,7 +576,7 @@ Component({
 			if (!this.data.over_page || _is_refresh || (this.data.over_page && this.data.content_height == 0) || (this.data.over_page && this.data.load_enable)) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 					this.data.content_height = __content.height
-					var diff = this.data.scroll_height - this.data.content_height - this.data.pin_height - this.data.pin_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+					var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
 					this.data.space_height = diff
 					if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 						this.data.space_height = this.data.space_height - this.data.empty_height
@@ -611,7 +599,7 @@ Component({
 					var info = {
 						"refresher_height": this.data.refresher_height,
 						"header_height": this.data.header_height,
-						"pin_height": this.data.pin_height,
+						"sticky_height": this.data.sticky_height,
 						"header_height_2": this.data.header_height_2,
 						"scroll_height": this.data.scroll_height,
 						"content_height": this.data.content_height,

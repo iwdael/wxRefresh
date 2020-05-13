@@ -1,10 +1,10 @@
 Page({
   data: {
     list1: [{}, {}, {}],
-    // list2: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    list2: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     list3: [{}, {}, {}],
     // list1: [],
-    list2: [{}, {}, {}],
+    // list2: [{}, {}, {}],
     // list3: [],
     refresh: false,
     load: false
@@ -13,15 +13,15 @@ Page({
   onRefresh(e) {
     setTimeout(() => {
       this.setData({
-        "refresh": false,
+        "refresh": 0,
       })
     }, 1000)
   },
 
-  onLoad(e) {
+  onLoadmore(e) {
     setTimeout(() => {
       this.setData({
-        "load": false,
+        "load": 1,
       })
     }, 1000)
   },
@@ -37,15 +37,17 @@ Page({
       "loadStatus": e.detail.status
     })
   },
-  onPinChange(e) {
-    // console.log("pin --- ", e.detail.progress)
+  onStickyChange(e) {
+    var id = e.detail.id
+    var pro = e.detail.progress
+    if (id == '__sticky') {
+      console.log(pro); 
+    }
   },
   onReady() {
     this.setData({
-      "refresh": true
+      "refresh": 100
     })
   },
-  onScrollBottom(e) {
-    console.log("onScrollBottom --- ", e)
-  }
+  onScrollBottom(e) {}
 })

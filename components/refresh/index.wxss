@@ -37,8 +37,9 @@
   height: auto;
 }
 
-.__pin_wrapper {
+.__sticky_wrapper {
   width: 100;
   height: auto;
   z-index: 1;
+  flex-direction: column;
 }
