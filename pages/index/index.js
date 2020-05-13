@@ -38,11 +38,14 @@ Page({
     })
   },
   onPinChange(e) {
-    console.log("pin --- ", e.detail.progress)
+    // console.log("pin --- ", e.detail.progress)
   },
   onReady() {
     this.setData({
       "refresh": true
     })
+  },
+  onScrollBottom(e) {
+    console.log("onScrollBottom --- ", e)
   }
 })

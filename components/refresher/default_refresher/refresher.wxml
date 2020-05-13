@@ -1,4 +1,4 @@
-<view class="scroll__refresh" style="padding: 20rpx 0;" >
+<view class="scroll__refresh" style="padding: 20rpx 0;">
 	<view class="scroll__loading {{ refreshStatus == 4 ? 'scroll__refresh--hidden' : '' }}">
 		<view wx:if="{{refreshStatus == 1 || refreshStatus == 2}}" class="{{refreshStatus == 2 ? 'rotate' : ''}} arrow"></view>
 		<view wx:if="{{refreshStatus == 3}}" class="loading">
@@ -19,8 +19,9 @@
 		<view class="text" wx:elif="{{refreshStatus == 2}}">松开更新</view>
 		<view class="text" wx:elif="{{refreshStatus == 3}}">刷新中...</view>
 	</view>
- 
-	<view class="success {{refreshStatus == 4 ? 'success--show' : ''}}" style="color:#999;">
-		<view class="info">刷新成功</view>
+
+	<view class="success {{refreshStatus >= 4 ? 'success--show' : ''}}" style="color:#999;">
+		<view class="info">{{refreshStatus == 4 ? '刷新成功':(refreshStatus == 5 ? '没有数据': '刷新失败') }}</view>
 	</view>
+
 </view>

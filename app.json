@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/cross_boundary_rebound_height/index"
+    "pages/empty/page","pages/half_page/page", "pages/index/index", "pages/cross_boundary_rebound_height/index"
+
   ],
   "window": {
     "backgroundTextStyle": "light",

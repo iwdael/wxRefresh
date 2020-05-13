@@ -24,6 +24,14 @@
   height: auto;
 }
 
+.__center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}
+
 .__wrapper {
   width: auto;
   height: auto;
@@ -31,6 +39,6 @@
 
 .__pin_wrapper {
   width: 100;
-  height: auto; 
-  z-index: 1; 
+  height: auto;
+  z-index: 1;
 }

@@ -20,7 +20,7 @@
 		<view class="text" wx:elif="{{loadStatus == 3}}">加载中...</view>
 	</view>
 
-	<view class="success {{loadStatus == 4 ? 'success--show' : ''}}" style="color:#999;">
-		<view class="info">加载成功</view>
+	<view class="success {{loadStatus >= 4 ? 'success--show' : ''}}" style="color:#999;">
+		<view class="info">{{loadStatus == 4 ? '加载成功':(loadStatus == 5 ? '没有数据': '加载失败') }}</view>
 	</view>
 </view>
