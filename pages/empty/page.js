@@ -23,7 +23,7 @@ Page({
         "load": 1,
         list: this.data.list
       })
-    }, 1000)
+    }, 3000)
   },
 
 

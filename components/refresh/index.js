@@ -334,6 +334,8 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
+			console.log('scroll top ----- ', top);
+
 			if (e.detail.manual == null) {
 				this.data.current_scroll = top
 			}
@@ -496,10 +498,14 @@ Component({
 					this.setData({
 						load_status: this.data.load_status
 					})
+					//当刷新完成之前，布局由于手动操作滚上去。
 
-					this.setData({
-						scroll_distance: -this.data.space_height + this.rpx2px(this.properties.load_success_height)
-					})
+					if (this.data.current_scroll > this.rpx2px(this.properties.load_success_height) - this.data.space_height) {
+						this.setData({
+							scroll_distance: -this.data.space_height + this.rpx2px(this.properties.load_success_height)
+						})
+					}
+
 					if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
 						setTimeout(() => {
 							this.setData({

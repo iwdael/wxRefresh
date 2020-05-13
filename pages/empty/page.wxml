@@ -1,5 +1,5 @@
 <view style="display:flex;flex-direction:column;">
-	<refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh_success_height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" load_success_height="70" bind:pin="onPinChange" space_color="#dedede" no_data_to_load_more_enable="{{true}}">
+	<refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh_success_height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" load_success_height="70" bind:pin="onPinChange" space_color="#dedede"  >
 		<default-refresher slot="refresher" status="{{refreshStatus}}" />
 		<!-- <view slot="header" style="width:100%;height:1800rpx;background:#555;"></view> -->
 		<view slot="content" style="width:100%;display:flex;flex-direction:column;">
