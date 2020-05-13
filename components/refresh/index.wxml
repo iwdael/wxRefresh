@@ -1,12 +1,12 @@
 <movable-area class="__movable_area">
-	<view id="__sticky_wrapper" class="__sticky_wrapper" style="margin-top:{{top_size}}rpx;">
+	<view id="__sticky_wrapper" class="__sticky_wrapper" style="margin-top:{{topSize}}rpx;">
 		<slot wx:if="{{sticky}}" name="sticky"></slot>
 		<slot wx:if="{{sticky_2}}" name="sticky_2"></slot>
 	</view>
 	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_status >= 3 || load_status >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresher_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
-		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_status == 1 && load_status == 1) || ( refresh_status == 1 && over_page && load_status > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scroll_distance}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
-			<view style="height:{{top_size}}rpx" />
-			<view id="__refresher_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * refresher_height+ 'px' : refresher_height +'px' }};" />
+		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_status == 1 && load_status == 1) || ( refresh_status == 1 && over_page && load_status > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scrollSpace}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
+			<view style="height:{{topSize}}rpx" />
+			<view id="__refresher_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * refresher_height+ 'px' : refresher_height +'px' }};" />
 			<view id="__refresher" class="__wrapper">
 				<slot name="refresher"></slot>
 			</view>
@@ -30,7 +30,7 @@
 			<view id="__content_empty" wx:if="{{( space_height < empty_height || empty_height ==0) && content_height == 0 }}" class="__center" style="width:100%;">
 				<slot name="empty" />
 			</view>
-			<view id="__content_space" wx:if="{{!over_page}}" class="__center" style="width:100%;height:{{space_height}}px;background:{{space_color}}">
+			<view id="__content_space" wx:if="{{!over_page}}" class="__center" style="width:100%;height:{{space_height}}px;background:{{spaceColor}}">
 				<block wx:if="{{space_height >= empty_height && content_height == 0 }}" class="__wrapper" style="opacity:{{empty_height==0? 0:1}};">
 					<slot name="empty" />
 				</block>
@@ -38,9 +38,9 @@
 			<view id="__footer" class="__wrapper">
 				<slot name="footer"></slot>
 			</view>
-			<view id="__footer_space" style="width:100%;height:{{cross_boundary_rebound_height != 0 ?  2 * footer_height+ 'px' : footer_height +'px' }};" />
-			<view id="__over_page_footer_space" wx:if="{{over_page && cross_boundary_rebound_height == 0 && load_enable }}" style="width:100%;height:{{over_page_footer_height}}px;" />
-			<view style="height:{{bottom_size}}rpx" />
+			<view id="__footer_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * footer_height+ 'px' : footer_height +'px' }};" />
+			<view id="__over_page_footer_space" wx:if="{{over_page && crossBoundaryReboundHeight == 0 && loadEnable }}" style="width:100%;height:{{over_page_footer_height}}px;" />
+			<view style="height:{{bottomSize}}rpx" />
 		</scroll-view>
 	</movable-view>
 </movable-area>

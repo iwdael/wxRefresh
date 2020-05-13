@@ -7,7 +7,7 @@ Page({
     // list: []
   },
   onRefresh(e) {
-    // this.data.list = []
+    this.data.list = []
     setTimeout(() => {
       this.setData({
         "refresh": 0,

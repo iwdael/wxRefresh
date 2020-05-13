@@ -10,15 +10,15 @@ Page({
   onRefresh(e) {
     setTimeout(() => {
       this.setData({
-        "refresh": false,
+        "refresh": 1,
       })
     }, 1000)
   },
 
-  onLoad(e) {
+  onLoadmore(e) {
     setTimeout(() => {
       this.setData({
-        "load": false,
+        "load": 1,
       })
     }, 1000)
   },

@@ -15,50 +15,50 @@ Component({
 			type: Number,
 			value: 1800,
 		},
-		refresh_success_height: {
+		refreshSuccessHeight: {
 			type: Number,
 			value: 0
 		},
-		load_success_height: {
+		loadSuccessHeight: {
 			type: Number,
 			value: '0px'
 		},
-		refresh_enable: {
+		refreshEnable: {
 			type: Boolean,
 			value: true,
 		},
-		load_enable: {
+		loadEnable: {
 			type: Boolean,
 			value: true,
 		},
-		space_color: {
+		spaceColor: {
 			type: String,
 			value: "rgba(255, 255, 255, 0)"
 		},
-		top_size: {
+		topSize: {
 			type: Number,
 			value: 0,
 			observer: "topSizeObserver"
 		},
-		bottom_size: {
+		bottomSize: {
 			type: Number,
 			value: 0,
 			observer: "bottomSizeObserver"
 		},
-		cross_boundary_rebound_height: {
+		crossBoundaryReboundHeight: {
 			type: Number,
 			value: 0
 		},
-		scroll_distance: {
+		scrollSpace: {
 			type: String,
 			value: '0px'
 		},
-		calc_page: {
+		rebuild: {
 			value: false,
 			type: Boolean,
 			observer: "calcPageObserver"
 		},
-		no_data_to_load_more_enable: {
+		noDataToLoadMoreEnable: {
 			value: false,
 			type: Boolean,
 		},
@@ -125,7 +125,7 @@ Component({
 				this.data.sticky_height = __sticky.height
 				this.setData({
 					sticky_height: this.data.sticky_height,
-					top_size_px: this.rpx2px(this.properties.top_size)
+					top_size_px: this.rpx2px(this.properties.topSize)
 				})
 			}).exec();
 
@@ -133,7 +133,7 @@ Component({
 				this.data.sticky_height_2 = __sticky.height
 				this.setData({
 					sticky_height_2: this.data.sticky_height_2,
-					top_size_px: this.rpx2px(this.properties.top_size)
+					top_size_px: this.rpx2px(this.properties.topSize)
 				})
 			}).exec();
 
@@ -164,7 +164,7 @@ Component({
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 
 				this.data.content_height = __content.height
-				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 				this.data.space_height = diff
 				if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 					this.data.space_height = this.data.space_height - this.data.empty_height
@@ -186,9 +186,9 @@ Component({
 					}, {})
 				}
 
-				if (this.properties.cross_boundary_rebound_height > 0 && this.data.footer_height == 0 && this.data.header_height == 0 && !this.properties.refresh_enable && !this.properties.load_enable) {
-					this.data.refresher_height = this.rpx2px(this.properties.cross_boundary_rebound_height) / 2
-					this.data.footer_height = this.rpx2px(this.properties.cross_boundary_rebound_height) / 2
+				if (this.properties.crossBoundaryReboundHeight > 0 && this.data.footer_height == 0 && this.data.header_height == 0 && !this.properties.refreshEnable && !this.properties.loadEnable) {
+					this.data.refresher_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
+					this.data.footer_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
 					this.setData({
 						refresher_height: this.data.refresher_height,
 						footer_height: this.data.footer_height,
@@ -220,10 +220,10 @@ Component({
 
 
 			this.triggerEvent("refresh-status", {
-				'status': this.properties.refresh_enable ? 1 : 0
+				'status': this.properties.refreshEnable ? 1 : 0
 			}, {})
 			this.triggerEvent("load-status", {
-				'status': this.properties.load_enable ? 1 : 0
+				'status': this.properties.loadEnable ? 1 : 0
 			}, {})
 		},
 		onMovableChange(e) {
@@ -236,14 +236,14 @@ Component({
 			this.triggerEvent("drag", e.detail, {})
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
-			if (y >= -this.data.refresher_height && this.properties.refresh_enable) { // |-| | | |
+			if (y >= -this.data.refresher_height && this.properties.refreshEnable) { // |-| | | |
 				if (this.data.refresh_status != 2) {
 					this.data.refresh_status = 2
 					this.triggerEvent("refresh-status", {
 						'status': this.data.refresh_status
 					}, {})
 				}
-			} else if (y >= -2 * this.data.refresher_height && y < -this.data.refresher_height && this.properties.refresh_enable) { // | |-| | |
+			} else if (y >= -2 * this.data.refresher_height && y < -this.data.refresher_height && this.properties.refreshEnable) { // | |-| | |
 				if (this.data.refresh_status != 1) {
 					this.data.refresh_status = 1
 					this.triggerEvent("refresh-status", {
@@ -251,12 +251,12 @@ Component({
 					}, {})
 				}
 
-			} else if (y >= -2 * this.data.refresher_height - this.data.footer_height && y < -2 * this.data.refresher_height && !this.data.over_page && this.properties.load_enable) { // | | |-| |
+			} else if (y >= -2 * this.data.refresher_height - this.data.footer_height && y < -2 * this.data.refresher_height && !this.data.over_page && this.properties.loadEnable) { // | | |-| |
 				if (this.data.load_status != 1) {
 					this.data.load_status = 1
-					if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
+					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						// this.setData({
-						// 	over_page_footer_height: this.rpx2px(this.properties.load_success_height)
+						// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 						// })
 					} else {
 						this.triggerEvent("load-status", {
@@ -264,12 +264,12 @@ Component({
 						}, {})
 					}
 				}
-			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height - this.data.footer_height && !this.data.over_page && this.properties.load_enable) { // | | | |-|
+			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
 				if (this.data.load_status != 2) {
 					this.data.load_status = 2
-					if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
+					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						// this.setData({
-						// 	over_page_footer_height: this.rpx2px(this.properties.load_success_height)
+						// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 						// })
 					} else {
 						this.triggerEvent("load-status", {
@@ -277,10 +277,10 @@ Component({
 						}, {})
 					}
 				}
-			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height && this.data.over_page && this.properties.load_enable) {
-				if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
+			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height && this.data.over_page && this.properties.loadEnable) {
+				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 					// this.setData({
-					// 	over_page_footer_height: this.rpx2px(this.properties.load_success_height)
+					// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 					// })
 				} else {
 					this.data.load_status = 1
@@ -293,7 +293,7 @@ Component({
 			}
 		},
 		onMovableTouchEnd(e) {
-			this.triggerEvent("drag_end")
+			this.triggerEvent("drag-end")
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			// console.log(e)
 			if (this.data.refresh_status == 1 && this.data.load_status == 1) {
@@ -317,7 +317,7 @@ Component({
 				})
 
 				this.triggerEvent('refresh');
-			} else if (this.data.load_status == 2 && (this.properties.load != 1 || this.properties.no_data_to_load_more_enable)) {
+			} else if (this.data.load_status == 2 && (this.properties.load != 1 || this.properties.noDataToLoadMoreEnable)) {
 				this.data.load_status = 3
 				this.triggerEvent("load-status", {
 					'status': this.data.load_status
@@ -340,23 +340,23 @@ Component({
 				this.data.current_scroll = top
 			}
 			this.triggerEvent("scroll", {
-				scroll_distance: top
+				space: top
 			}, {})
 			if (this.data.sticky_height != 0) {
 				if (this.data.sticky) {} else {
-					var progress = top * 1.00 / this.data.header_height
+					var percent = top * 1.00 / this.data.header_height
 					this.triggerEvent("sticky", {
 						"id": "__sticky",
-						"progress": progress
+						"percent": percent
 					}, {})
 				}
 			}
 			if (this.data.sticky_height_2 != 0) {
 				if (this.data.sticky_2) {} else {
-					var progress = top * 1.00 / (this.data.header_height + this.data.header_height_2)
+					var percent = top * 1.00 / (this.data.header_height + this.data.header_height_2)
 					this.triggerEvent("sticky", {
 						"id": "__sticky_2",
-						"progress": progress
+						"percent": percent
 					}, {})
 				}
 			}
@@ -367,7 +367,7 @@ Component({
 			if (sticky) {
 				this.triggerEvent("sticky", {
 					"id": id,
-					"progress": 1
+					"percent": 1
 				}, {})
 			}
 			if (id == '__sticky' && this.data.sticky != sticky) {
@@ -397,13 +397,13 @@ Component({
 			}
 			if (this.properties.refresh == 100) return
 
-			if (this.data.refresh_success_height != 0) {
+			if (this.data.refreshSuccessHeight != 0) {
 				this.data.refresh_status = this.properties.refresh == 0 ? 4 : (this.properties.refresh == 1 ? 5 : 6)
 				this.triggerEvent("refresh-status", {
 					'status': this.data.refresh_status
 				}, {})
 				this.setData({
-					movable_y: -2 * this.data.refresher_height + this.rpx2px(this.properties.refresh_success_height),
+					movable_y: -2 * this.data.refresher_height + this.rpx2px(this.properties.refreshSuccessHeight),
 					refresh_status: this.data.refresh_status
 				})
 				setTimeout(() => {
@@ -447,14 +447,14 @@ Component({
 			}
 
 			if (this.properties.load == 100) return
-			if (this.data.load_success_height != 0 && !this.data.over_page) {
+			if (this.data.loadSuccessHeight != 0 && !this.data.over_page) {
 				this.data.load_status = this.properties.load == 0 ? 4 : (this.properties.load == 1 ? 5 : 6)
 				this.triggerEvent("load-status", {
 					'status': this.data.load_status
 				}, {})
 
 				this.setData({
-					movable_y: -2 * this.data.refresher_height - this.rpx2px(this.properties.load_success_height),
+					movable_y: -2 * this.data.refresher_height - this.rpx2px(this.properties.loadSuccessHeight),
 					load_status: this.data.load_status
 				})
 				setTimeout(() => {
@@ -466,9 +466,9 @@ Component({
 						this.setData({
 							load_status: this.data.load_status
 						})
-						if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
+						if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 							this.setData({
-								over_page_footer_height: this.rpx2px(this.properties.load_success_height)
+								over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 							})
 						} else {
 							this.triggerEvent("load-status", {
@@ -477,7 +477,7 @@ Component({
 						}
 					}, 1000)
 				}, this.properties.duration)
-			} else if (this.data.load_success_height != 0 && this.data.over_page) {
+			} else if (this.data.loadSuccessHeight != 0 && this.data.over_page) {
 				if (this.properties.load != 0) {
 					this.data.load_status = this.properties.load == 1 ? 5 : 6
 					this.triggerEvent("load-status", {
@@ -488,16 +488,16 @@ Component({
 					})
 					//当刷新完成之前，布局由于手动操作滚上去。
 
-					if (this.data.current_scroll > this.rpx2px(this.properties.load_success_height) - this.data.space_height) {
+					if (this.data.current_scroll > this.rpx2px(this.properties.loadSuccessHeight) - this.data.space_height) {
 						this.setData({
-							scroll_distance: -this.data.space_height + this.rpx2px(this.properties.load_success_height)
+							scrollSpace: -this.data.space_height + this.rpx2px(this.properties.loadSuccessHeight)
 						})
 					}
 
-					if (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable) {
+					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						setTimeout(() => {
 							this.setData({
-								over_page_footer_height: this.rpx2px(this.properties.load_success_height)
+								over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 							})
 						}, 500)
 					}
@@ -515,7 +515,7 @@ Component({
 						load_status: this.data.load_status
 					})
 				}
-			} else if (this.data.load_success_height == 0 && this.data.over_page) {
+			} else if (this.data.loadSuccessHeight == 0 && this.data.over_page) {
 				this.data.load_status = 1
 				this.triggerEvent("load-status", {
 					'status': this.data.load_status
@@ -523,7 +523,7 @@ Component({
 				this.setData({
 					load_status: this.data.load_status
 				})
-			} else if (this.data.load_success_height == 0 && !this.data.over_page) {
+			} else if (this.data.loadSuccessHeight == 0 && !this.data.over_page) {
 				this.data.load_status = 1
 				this.triggerEvent("load-status", {
 					'status': this.data.load_status
@@ -535,9 +535,9 @@ Component({
 			}
 		},
 		calcPageObserver() {
-			if (this.properties.calc_page)
+			if (this.properties.rebuild)
 				this.calcPage(true)
-			this.properties.calc_page = false
+			this.properties.rebuild = false
 		},
 		topSizeObserver() {
 			this.calcPage(true)
@@ -547,8 +547,8 @@ Component({
 		},
 		onScrollBottom(e) {
 			this.triggerEvent('bottom');
-			if (!this.properties.load_enable) return
-			if (this.properties.load == 100 || (this.properties.load == 1 && !this.properties.no_data_to_load_more_enable)) return
+			if (!this.properties.loadEnable) return
+			if (this.properties.load == 100 || (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable)) return
 			this.properties.load = 100
 			if (this.data.load_status == 1) {
 				this.data.load_status = 2
@@ -573,10 +573,10 @@ Component({
 		},
 
 		calcPage(_is_refresh) {
-			if (!this.data.over_page || _is_refresh || (this.data.over_page && this.data.content_height == 0) || (this.data.over_page && this.data.load_enable)) {
+			if (!this.data.over_page || _is_refresh || (this.data.over_page && this.data.content_height == 0) || (this.data.over_page && this.data.loadEnable)) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 					this.data.content_height = __content.height
-					var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.top_size) - this.rpx2px(this.properties.bottom_size)
+					var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 					this.data.space_height = diff
 					if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 						this.data.space_height = this.data.space_height - this.data.empty_height
