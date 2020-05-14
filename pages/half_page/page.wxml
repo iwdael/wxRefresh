@@ -1,9 +1,0 @@
-<view style="display:flex;flex-direction:column;">
-	<refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh-success-height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" load-success-height="70" bind:pin="onPinChange" space-color="#dedede" bind:bottom="onScrollBottom">
-		<default-refresher slot="refresher" status="{{refreshStatus}}" />
-		<view slot="content" style="width:100%;display:flex;flex-direction:column;">
-			<view wx:for="{{list}}" style="margin:20rpx;width:710rpx;height:120rpx;background:red;"></view>
-		</view>
-		<default-footer slot="footer" status="{{loadStatus}}" />
-	</refresh>
-</view>

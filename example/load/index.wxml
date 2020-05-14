@@ -1,0 +1,13 @@
+ <refresh load-success-height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" refresh-enable="{{false}}">
+ 	<default-header slot="header" status="{{refreshStatus}}" />
+ 	<view slot="content" class="content">
+ 		<view class="book" wx:for="{{articles}}">
+ 			<image class="book-cover" src="{{item.cover}}" />
+ 			<view class="horizontal">
+ 				<view class="book-title">{{item.title}}</view>
+ 				<view class="book-description">{{item.description}}</view>
+ 			</view>
+ 		</view>
+ 	</view>
+ 	<default-footer slot="footer" status="{{loadStatus}}" />
+ </refresh>

@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "refresh": "/components/refresh/index",   
+    "default-header":"/components/header/default-header/index",
+    "default-footer" :"/components/footer/default-footer/index"
+  },
+  "disableScroll": true
+}

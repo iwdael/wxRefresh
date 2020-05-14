@@ -1,16 +1,21 @@
 {
   "pages": [
-    "pages/cross_boundary_rebound_height/index",
-    "pages/content_empty/page",
-    "pages/index/index",
-    "pages/half_page/page" 
+    "example/index",
+    "example/content-empty/index",
+    "example/cross-boundary-rebound/index",
+    "example/cross-boundary-rebound-sticky/index",
+    "example/cross-boundary-rebound-sticky-2/index",
+    "example/load/index",
+    "example/refresh/index",
+    "example/refresh-load/index",
+    "example/refresh-load-sticky/index",
+    "example/refresh-load-sticky-2/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
-    "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationBarTitleText": "微信小程序刷新组件",
+    "navigationBarTextStyle": "black"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

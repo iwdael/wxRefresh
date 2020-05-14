@@ -1,7 +1,6 @@
 <wxs src="./index.wxs" module="computed" />
-
 <view class="weui-sticky" style="{{computed.containerStyle({fixed, height, zIndex})}}">
-  <view id="__sticky" class="{{fixed ? 'weui-sticky__fixed' : ''}}" style="{{computed.wrapStyle({fixed, offsetTop,stickyTop})}};height:{{sticky_height}}px"> 
-    <slot ></slot> 
+  <view id="__sticky_core" class="{{fixed ? 'weui-sticky__fixed' : ''}}" style="{{computed.wrapStyle({fixed, offsetTop,stickyTop})}};height:{{sticky_height}}px"> 
+    <slot/> 
   </view>
 </view>

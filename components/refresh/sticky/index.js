@@ -298,7 +298,8 @@ module.exports =
                             _containerHeight = _data2._containerHeight,
                             _relativeTop = _data2._relativeTop,
                             offsetTop = _data2.offsetTop;
-
+                            // console.log('offsetTop --- ', offsetTop);
+                            
                         var fixed = _containerHeight && height ? top >= height + offsetTop + _relativeTop - _containerHeight && top < offsetTop : top < offsetTop;
                         if (fixed == this.data.fixed) return
                         this.data.fixed = fixed
@@ -312,7 +313,7 @@ module.exports =
                     }
                 },
                 ready() {
-                    this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
+                    this.createSelectorQuery().select("#__sticky_core").boundingClientRect((__sticky) => {
                         this.setData({
                             sticky_height: __sticky.height
                         })

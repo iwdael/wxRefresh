@@ -3,25 +3,25 @@
 		<slot wx:if="{{sticky}}" name="sticky"></slot>
 		<slot wx:if="{{sticky_2}}" name="sticky_2"></slot>
 	</view>
-	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_status >= 3 || load_status >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * refresher_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
+	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_status >= 3 || load_status >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * header_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_status == 1 && load_status == 1) || ( refresh_status == 1 && over_page && load_status > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scrollSpace}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
 			<view style="height:{{topSize}}rpx" />
-			<view id="__refresher_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * refresher_height+ 'px' : refresher_height +'px' }};" />
-			<view id="__refresher" class="__wrapper">
-				<slot name="refresher"></slot>
-			</view>
+			<view id="__header_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * header_height+ 'px' : header_height +'px' }};" />
 			<view id="__header" class="__wrapper">
 				<slot name="header"></slot>
 			</view>
+			<view id="__interval" class="__wrapper">
+				<slot name="interval"></slot>
+			</view>
 
-			<sticky id="__sticky" class="__wrapper" offset-top="{{top_size_px}}" sticky-top="{{2 * refresher_height + top_size_px}}" bind:sticky="onPinSticky">
+			<sticky id="__sticky" class="__wrapper" offset-top="{{top_size_px}}" sticky-top="{{2 * header_height + top_size_px}}" bind:sticky="onPinSticky">
 				<slot name="sticky" />
 			</sticky>
 
-			<view id="__header_2" class="__wrapper">
-				<slot name="header_2"></slot>
+			<view id="__interval_2" class="__wrapper">
+				<slot name="interval_2"></slot>
 			</view>
-			<sticky id="__sticky_2" class="__wrapper" offset-top="{{sticky_height + top_size_px }}" sticky-top="{{2 * refresher_height + sticky_height +top_size_px}}" bind:sticky="onPinSticky">
+			<sticky id="__sticky_2" class="__wrapper" offset-top="{{sticky_height + top_size_px }}" sticky-top="{{2 * header_height + sticky_height +top_size_px}}" bind:sticky="onPinSticky">
 				<slot name="sticky_2" />
 			</sticky>
 			<view id="__content" class="__vertical">

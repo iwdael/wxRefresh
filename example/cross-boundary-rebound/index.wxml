@@ -1,0 +1,11 @@
+ <refresh refresh-enable="{{false}}" load-enable="{{false}}" cross-boundary-rebound-height="140">
+ 	<view slot="content" class="content">
+ 		<view class="book" wx:for="{{articles}}">
+ 			<image class="book-cover" src="{{item.cover}}" />
+ 			<view class="horizontal">
+ 				<view class="book-title">{{item.title}}</view>
+ 				<view class="book-description">{{item.description}}</view>
+ 			</view>
+ 		</view>
+ 	</view>
+ </refresh>

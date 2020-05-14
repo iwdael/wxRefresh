@@ -21,7 +21,7 @@ Component({
 		},
 		loadSuccessHeight: {
 			type: Number,
-			value: '0px'
+			value: '0'
 		},
 		refreshEnable: {
 			type: Boolean,
@@ -68,19 +68,20 @@ Component({
 	},
 	data: {
 		//sticky
-		header_height: 0,
+		interval_height: 0,
 		sticky_height: 0,
 		sticky: false,
 
 		//sticky_2
-		header_height_2: 0,
+		interval_height_2: 0,
 		sticky_height_2: 0,
 		sticky_2: false,
 
 		movable_height: 0,
-		//刷新  
-		refresher_height: 0,
 		movable_y: 0, //movable y方向的偏移量
+
+		//刷新  
+		header_height: 0,
 		refresh_status: 1, // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 
 		//加载
@@ -98,11 +99,12 @@ Component({
 	},
 	methods: {
 		init() {
-			this.createSelectorQuery().select("#__refresher").boundingClientRect((__refresher) => {
-				this.data.refresher_height = __refresher.height
+			this.createSelectorQuery().select("#__header").boundingClientRect((__header) => {
+				this.data.header_height = __header.height
+
 				this.setData({
-					refresher_height: this.data.refresher_height,
-					movable_y: -2 * this.data.refresher_height,
+					header_height: this.data.header_height,
+					movable_y: -2 * this.data.header_height,
 					animation: ''
 				})
 				setTimeout(() => {
@@ -112,13 +114,13 @@ Component({
 				})
 			}).exec();
 
-			this.createSelectorQuery().select("#__header").boundingClientRect((__header) => {
-				this.data.header_height = __header.height
+			this.createSelectorQuery().select("#__interval").boundingClientRect((__interval) => {
+				this.data.interval_height = __interval.height
 			}).exec();
 
 
-			this.createSelectorQuery().select("#__header_2").boundingClientRect((__header) => {
-				this.data.header_height_2 = __header.height
+			this.createSelectorQuery().select("#__interval_2").boundingClientRect((__interval) => {
+				this.data.interval_height_2 = __interval.height
 			}).exec();
 
 			this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
@@ -164,7 +166,7 @@ Component({
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 
 				this.data.content_height = __content.height
-				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
+				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.interval_height - this.data.interval_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 				this.data.space_height = diff
 				if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 					this.data.space_height = this.data.space_height - this.data.empty_height
@@ -186,13 +188,16 @@ Component({
 					}, {})
 				}
 
-				if (this.properties.crossBoundaryReboundHeight > 0 && this.data.footer_height == 0 && this.data.header_height == 0 && !this.properties.refreshEnable && !this.properties.loadEnable) {
-					this.data.refresher_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
-					this.data.footer_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
+				if (this.properties.crossBoundaryReboundHeight > 0 && (this.data.footer_height == 0 || this.data.header_height == 0)) {
+					if (this.data.header_height == 0)
+						this.data.header_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
+					if (this.data.footer_height == 0)
+						this.data.footer_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
 					this.setData({
-						refresher_height: this.data.refresher_height,
+						header_height: this.data.header_height,
 						footer_height: this.data.footer_height,
-						movable_y: -2 * this.data.refresher_height,
+						movable_y: -2 * this.data.header_height,
+						top_size_px: this.rpx2px(this.properties.topSize),
 						animation: ''
 					})
 					setTimeout(() => {
@@ -200,13 +205,16 @@ Component({
 							animation: 'true'
 						}, 50)
 					})
-
 				}
+				if (this.data.header_height == 0)
+					console.error('You should add header for wxRefresh. Click here(https://github.com/hacknife/wxRefresh)')
+				if (this.data.footer_height == 0)
+					console.error('You should add footer for wxRefresh. Click here(https://github.com/hacknife/wxRefresh)')
 				var info = {
-					"refresher_height": this.data.refresher_height,
 					"header_height": this.data.header_height,
+					"interval_height": this.data.interval_height,
 					"sticky_height": this.data.sticky_height,
-					"header_height_2": this.data.header_height_2,
+					"interval_height_2": this.data.interval_height_2,
 					"scroll_height": this.data.scroll_height,
 					"content_height": this.data.content_height,
 					"footer_height": this.data.footer_height,
@@ -229,21 +237,21 @@ Component({
 		onMovableChange(e) {
 			this.onScrollChanged({
 				detail: {
-					scrollTop: this.data.current_scroll - (this.data.refresher_height + this.data.footer_height) - e.detail.y,
+					scrollTop: this.data.current_scroll - (this.data.header_height + this.data.footer_height) - e.detail.y,
 					manual: true,
 				}
 			})
 			this.triggerEvent("drag", e.detail, {})
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
-			if (y >= -this.data.refresher_height && this.properties.refreshEnable) { // |-| | | |
+			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
 				if (this.data.refresh_status != 2) {
 					this.data.refresh_status = 2
 					this.triggerEvent("refresh-status", {
 						'status': this.data.refresh_status
 					}, {})
 				}
-			} else if (y >= -2 * this.data.refresher_height && y < -this.data.refresher_height && this.properties.refreshEnable) { // | |-| | |
+			} else if (y >= -2 * this.data.header_height && y < -this.data.header_height && this.properties.refreshEnable) { // | |-| | |
 				if (this.data.refresh_status != 1) {
 					this.data.refresh_status = 1
 					this.triggerEvent("refresh-status", {
@@ -251,7 +259,7 @@ Component({
 					}, {})
 				}
 
-			} else if (y >= -2 * this.data.refresher_height - this.data.footer_height && y < -2 * this.data.refresher_height && !this.data.over_page && this.properties.loadEnable) { // | | |-| |
+			} else if (y >= -2 * this.data.header_height - this.data.footer_height && y < -2 * this.data.header_height && !this.data.over_page && this.properties.loadEnable) { // | | |-| |
 				if (this.data.load_status != 1) {
 					this.data.load_status = 1
 					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
@@ -264,7 +272,7 @@ Component({
 						}, {})
 					}
 				}
-			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
+			} else if (y >= -2 * this.data.header_height - 2 * this.data.footer_height && y < -2 * this.data.header_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
 				if (this.data.load_status != 2) {
 					this.data.load_status = 2
 					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
@@ -277,7 +285,7 @@ Component({
 						}, {})
 					}
 				}
-			} else if (y >= -2 * this.data.refresher_height - 2 * this.data.footer_height && y < -2 * this.data.refresher_height && this.data.over_page && this.properties.loadEnable) {
+			} else if (y >= -2 * this.data.header_height - 2 * this.data.footer_height && y < -2 * this.data.header_height && this.data.over_page && this.properties.loadEnable) {
 				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 					// this.setData({
 					// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
@@ -287,7 +295,7 @@ Component({
 					this.properties.load = 0
 					this.onScrollBottom('')
 					this.setData({
-						movable_y: -2 * this.data.refresher_height
+						movable_y: -2 * this.data.header_height
 					})
 				}
 			}
@@ -298,7 +306,7 @@ Component({
 			// console.log(e)
 			if (this.data.refresh_status == 1 && this.data.load_status == 1) {
 				this.setData({
-					movable_y: -2 * this.data.refresher_height
+					movable_y: -2 * this.data.header_height
 				})
 			} else if (this.data.refresh_status == 2) {
 				this.data.refresh_status = 3
@@ -311,7 +319,7 @@ Component({
 					'status': 1
 				}, {})
 				this.setData({
-					movable_y: -this.data.refresher_height,
+					movable_y: -this.data.header_height,
 					refresh_status: this.data.refresh_status,
 					over_page_footer_height: this.data.footer_height
 				})
@@ -324,13 +332,13 @@ Component({
 				}, {})
 				this.properties.load = 100
 				this.setData({
-					movable_y: -2 * this.data.refresher_height - this.data.footer_height,
+					movable_y: -2 * this.data.header_height - this.data.footer_height,
 					load_status: this.data.load_status,
 				})
 				this.triggerEvent('load');
 			} else if (this.data.load_status == 2) {
 				this.setData({
-					movable_y: -2 * this.data.refresher_height
+					movable_y: -2 * this.data.header_height
 				})
 			}
 		},
@@ -344,7 +352,7 @@ Component({
 			}, {})
 			if (this.data.sticky_height != 0) {
 				if (this.data.sticky) {} else {
-					var percent = top * 1.00 / this.data.header_height
+					var percent = top * 1.00 / this.data.interval_height
 					this.triggerEvent("sticky", {
 						"id": "__sticky",
 						"percent": percent
@@ -353,7 +361,7 @@ Component({
 			}
 			if (this.data.sticky_height_2 != 0) {
 				if (this.data.sticky_2) {} else {
-					var percent = top * 1.00 / (this.data.header_height + this.data.header_height_2)
+					var percent = top * 1.00 / (this.data.interval_height + this.data.interval_height_2)
 					this.triggerEvent("sticky", {
 						"id": "__sticky_2",
 						"percent": percent
@@ -362,8 +370,12 @@ Component({
 			}
 		},
 		onPinSticky(e) {
+			// console.log(e)
 			var id = e.currentTarget.id
 			var sticky = e.detail.sticky
+			// console.log('sticky id  ---  ', id);
+			// console.log('sticky val  ---  ', sticky);
+
 			if (sticky) {
 				this.triggerEvent("sticky", {
 					"id": id,
@@ -387,7 +399,7 @@ Component({
 			if (this.properties.refresh == 100 && !this.properties.load) {
 				setTimeout(() => {
 					this.setData({
-						movable_y: -this.data.refresher_height + 20
+						movable_y: -this.data.header_height + 20
 					})
 					setTimeout(() => {
 						this.onMovableTouchEnd(null)
@@ -403,12 +415,12 @@ Component({
 					'status': this.data.refresh_status
 				}, {})
 				this.setData({
-					movable_y: -2 * this.data.refresher_height + this.rpx2px(this.properties.refreshSuccessHeight),
+					movable_y: -2 * this.data.header_height + this.rpx2px(this.properties.refreshSuccessHeight),
 					refresh_status: this.data.refresh_status
 				})
 				setTimeout(() => {
 					this.setData({
-						movable_y: -2 * this.data.refresher_height,
+						movable_y: -2 * this.data.header_height,
 					})
 					setTimeout(() => {
 						this.data.refresh_status = 1
@@ -426,7 +438,7 @@ Component({
 					'status': this.data.refresh_status
 				}, {})
 				this.setData({
-					movable_y: -2 * this.data.refresher_height,
+					movable_y: -2 * this.data.header_height,
 					refresh_status: this.data.refresh_status
 				})
 			}
@@ -437,7 +449,7 @@ Component({
 			if (this.properties.load == 100 && this.properties.refresh != 100 && !this.data.over_page) {
 				setTimeout(() => {
 					this.setData({
-						movable_y: -2 * this.data.refresher_height - this.data.footer_height - 20
+						movable_y: -2 * this.data.header_height - this.data.footer_height - 20
 					})
 					setTimeout(() => {
 						this.onMovableTouchEnd(null)
@@ -454,12 +466,12 @@ Component({
 				}, {})
 
 				this.setData({
-					movable_y: -2 * this.data.refresher_height - this.rpx2px(this.properties.loadSuccessHeight),
+					movable_y: -2 * this.data.header_height - this.rpx2px(this.properties.loadSuccessHeight),
 					load_status: this.data.load_status
 				})
 				setTimeout(() => {
 					this.setData({
-						movable_y: -2 * this.data.refresher_height,
+						movable_y: -2 * this.data.header_height,
 					})
 					setTimeout(() => {
 						this.data.load_status = 1
@@ -516,22 +528,37 @@ Component({
 					})
 				}
 			} else if (this.data.loadSuccessHeight == 0 && this.data.over_page) {
-				this.data.load_status = 1
-				this.triggerEvent("load-status", {
-					'status': this.data.load_status
-				}, {})
 				this.setData({
-					load_status: this.data.load_status
+					scrollSpace: -this.data.space_height + this.rpx2px(this.properties.loadSuccessHeight),
 				})
+				setTimeout(() => {
+					this.data.load_status = 1
+					this.setData({
+						load_status: this.data.load_status,
+					})
+					this.triggerEvent("load-status", {
+						'status': this.data.load_status
+					}, {})
+					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
+						this.setData({
+							over_page_footer_height: 0
+						})
+					}
+				}, 500)
+
 			} else if (this.data.loadSuccessHeight == 0 && !this.data.over_page) {
 				this.data.load_status = 1
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status
+					'status': this.data.load_status,
 				}, {})
 				this.setData({
-					movable_y: -2 * this.data.refresher_height,
-					load_status: this.data.load_status
+					movable_y: -2 * this.data.header_height,
 				})
+				setTimeout(() => {
+					this.setData({
+						load_status: this.data.load_status
+					})
+				}, 800)
 			}
 		},
 		calcPageObserver() {
@@ -576,7 +603,7 @@ Component({
 			if (!this.data.over_page || _is_refresh || (this.data.over_page && this.data.content_height == 0) || (this.data.over_page && this.data.loadEnable)) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 					this.data.content_height = __content.height
-					var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.header_height - this.data.header_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
+					var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.interval_height - this.data.interval_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 					this.data.space_height = diff
 					if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 						this.data.space_height = this.data.space_height - this.data.empty_height
@@ -597,10 +624,10 @@ Component({
 						})
 					}
 					var info = {
-						"refresher_height": this.data.refresher_height,
 						"header_height": this.data.header_height,
+						"interval_height": this.data.interval_height,
 						"sticky_height": this.data.sticky_height,
-						"header_height_2": this.data.header_height_2,
+						"interval_height_2": this.data.interval_height_2,
 						"scroll_height": this.data.scroll_height,
 						"content_height": this.data.content_height,
 						"footer_height": this.data.footer_height,

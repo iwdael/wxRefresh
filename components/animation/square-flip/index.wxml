@@ -1,5 +1,0 @@
-<view class="loading-box" style="width:{{size}};height:{{size}};">
-	<view class="loading-rotate-cube-parent" style="perspective:{{perspective}};-webkit-perspective:{{perspective}};">
-		<view class="loading-rotate-cube" style="width:{{size}};height:{{size}};"></view>
-	</view>
-</view>
