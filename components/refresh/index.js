@@ -235,22 +235,18 @@ Component({
 			}, {})
 		},
 		onMovableChange(e) {
-			this.onScrollChanged({
-				detail: {
-					scrollTop: this.data.current_scroll - (this.data.header_height + this.data.footer_height) - e.detail.y,
-					manual: true,
-				}
-			})
-			this.triggerEvent("drag", e.detail, {})
+			this.triggerEvent("drag", {
+				space: -2 * this.data.header_height - e.detail.y
+			}, {})
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
 			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
 				if (this.data.refresh_status != 2) {
 					this.data.refresh_status = 2
 					this.triggerEvent("refresh-status", {
-						'status': this.data.refresh_status
+						'status': this.data.refresh_status, 
 					}, {})
-				}
+				} 
 			} else if (y >= -2 * this.data.header_height && y < -this.data.header_height && this.properties.refreshEnable) { // | |-| | |
 				if (this.data.refresh_status != 1) {
 					this.data.refresh_status = 1
@@ -303,7 +299,6 @@ Component({
 		onMovableTouchEnd(e) {
 			this.triggerEvent("drag-end")
 			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
-			// console.log(e)
 			if (this.data.refresh_status == 1 && this.data.load_status == 1) {
 				this.setData({
 					movable_y: -2 * this.data.header_height
@@ -344,9 +339,10 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
-			if (e.detail.manual == null) {
-				this.data.current_scroll = top
-			}
+			this.data.current_scroll = top
+			// if (e.detail.manual == null) {
+			// 	this.data.current_scroll = top
+			// }
 			this.triggerEvent("scroll", {
 				space: top
 			}, {})

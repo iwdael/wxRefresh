@@ -1,9 +1,9 @@
 {
-  "pages": [
+  "pages": ["example/cross-boundary-rebound-sticky/index",
     "example/index",
     "example/content-empty/index",
     "example/cross-boundary-rebound/index",
-    "example/cross-boundary-rebound-sticky/index",
+    
     "example/cross-boundary-rebound-sticky-2/index",
     "example/load/index",
     "example/refresh/index",

@@ -1,4 +1,19 @@
- <refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh-success-height="70" load-success-height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus">
+ <refresh 
+			refresh='{{refresh}}' 
+			load="{{load}}"  
+			refresh-success-height="70" 
+			load-success-height="70" 
+			bind:refresh="onRefresh" 
+			bind:load="onLoadmore" 
+			bind:refresh-status="onRefreshStatus" 
+			bind:load-status="onLoadStatus"
+			bind:info="onRefreshInfo"
+			bind:drag="onRefreshDrag"
+			bind:drag-end="onRefreshDragEnd"
+			bind:scroll="onRefreshScroll" 
+			bind:bottom="onRefreshBottom"
+			bind:top="onRefreshTop"
+			>
  	<default-header slot="header" status="{{refreshStatus}}" />
 
  	<view slot="content" class="content">
