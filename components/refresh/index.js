@@ -230,6 +230,11 @@ Component({
 					"space_height": this.data.space_height,
 				}
 				// console.log(info)
+				if (this.data.content_height > 0) {
+					setTimeout(() => {
+						this.rebuild(true)
+					}, 50)
+				}
 				this.triggerEvent("info", info, {})
 			}).exec();
 
@@ -244,6 +249,12 @@ Component({
 			this.triggerEvent("drag", {
 				space: -2 * this.data.header_height - e.detail.y
 			}, {})
+			this.onScrollChanged({
+				detail: {
+					scrollTop: this.data.current_scroll - 2 * this.data.header_height - e.detail.y,
+					manual: ''
+				}
+			})
 			var y = e.detail.y
 			if (this.data.refresh_state > 2 || this.data.load_state > 2) { // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 				if (this.data.refresh_state == 3) {
@@ -361,11 +372,16 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
-			this.data.current_scroll = top
-
-			this.triggerEvent("scroll", {
+			if (e.detail.manual == null) {
+				this.data.current_scroll = top
+				this.triggerEvent("scroll", {
+					space: top
+				}, {})
+			}
+			this.triggerEvent("scroll-drag", {
 				space: top
 			}, {})
+			// if (e.detail.manual != null) return
 			if (this.data.sticky_height != 0) {
 				if (top >= this.data.sticky_offset) {
 					if (this.data.sticky != true) {
@@ -448,7 +464,7 @@ Component({
 
 
 			}
-		}, 
+		},
 		refreshObserver() {
 			this.rebuild(true)
 			if (this.properties.refresh == 100 && !this.properties.load) {
