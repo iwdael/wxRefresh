@@ -229,7 +229,7 @@ Component({
 					"empty_height": this.data.empty_height,
 					"space_height": this.data.space_height,
 				}
-				console.log(info)
+				// console.log(info)
 				this.triggerEvent("info", info, {})
 			}).exec();
 

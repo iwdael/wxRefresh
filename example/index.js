@@ -34,6 +34,9 @@ Page({
             }, {
                 'title': '加载',
                 'url': 'load'
+            }, {
+                'title': '默认显示',
+                'url': 'content-empty'
             }, ]
         }]
     },

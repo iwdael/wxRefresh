@@ -1,2 +1,16 @@
-<!--example/content-empty/index.wxml-->
-<text>example/content-empty/index.wxml</text>
+ <refresh bind:refresh="onRefresh" bind:load="onLoadmore" refresh='{{refresh}}' load='{{load}}' bind:refresh-status="onRefreshStatus" bind:load-status="onLoadStatus" refresh-success-height="70" load-success-height="70">
+ 	<default-header slot="header" status="{{refreshStatus}}" />
+ 	<view slot="content" class="content">
+ 		<view class="book" wx:for="{{articles}}">
+ 			<image class="book-cover" src="{{item.cover}}" />
+ 			<view class="horizontal">
+ 				<view class="book-title">{{item.title}}</view>
+ 				<view class="book-description">{{item.description}}</view>
+ 			</view>
+ 		</view>
+ 	</view>
+ 	<view slot="empty" class="center" style="width:100vw;height:300rpx;">
+ 		<view style="width:200rpx;height:200rpx;background:yellow;"></view>
+ 	</view>
+ 	<default-footer slot="footer" status="{{loadStatus}}" />
+ </refresh>
