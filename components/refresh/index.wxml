@@ -7,30 +7,29 @@
 	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_state >= 3 || load_state >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * header_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
 		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_state == 1 && load_state == 1) || ( refresh_state == 1 && over_page && load_state > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scrollSpace}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
 			<view style="height:{{topSize}}rpx" />
-			<view id="__header_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * header_height+ 'px' : header_height +'px' }};" />
+			<view id="__header_space" style="width:100%;height:{{ !header_exist  ?  2 * header_height+ 'px' : header_height +'px' }};" />
 			<view id="__header" class="__wrapper">
 				<slot name="header"></slot>
 			</view>
 			<view id="__interval" class="__wrapper">
 				<slot name="interval"></slot>
 			</view>
-
-			<sticky id="__sticky" class="__wrapper" offset-top="{{top_size_px}}" sticky-top="{{2 * header_height + top_size_px}}" bind:sticky="onPinSticky">
-				<slot name="sticky" />
-			</sticky>
+			<view id="__sticky" class="__wrapper" style="width:100%;height:{{sticky_height==0? 'auto' : sticky_height + 'px'}};">
+				<slot wx:if="{{!sticky}}" name="sticky" />
+			</view>
 
 			<view id="__interval_2" class="__wrapper">
 				<slot name="interval_2"></slot>
 			</view>
-			<sticky id="__sticky_2" class="__wrapper" offset-top="{{sticky_height + top_size_px }}" sticky-top="{{2 * header_height + sticky_height +top_size_px}}" bind:sticky="onPinSticky">
-				<slot name="sticky_2" />
-			</sticky>
+			<view id="__sticky_2" class="__wrapper" style="width:100%;height:{{sticky_height_2==0? 'auto' : sticky_height_2 + 'px'}};">
+				<slot wx:if="{{!sticky_2}}" name="sticky_2" />
+			</view>
 			<view id="__interval_3" class="__wrapper">
 				<slot name="interval_3"></slot>
 			</view>
-			<sticky id="__sticky_3" class="__wrapper" offset-top="{{sticky_height + sticky_height_2 + top_size_px }}" sticky-top="{{2 * header_height + sticky_height_2 + sticky_height +top_size_px}}" bind:sticky="onPinSticky">
-				<slot name="sticky_3" />
-			</sticky>
+			<view id="__sticky_3" class="__wrapper" style="width:100%;height:{{sticky_height_3==0? 'auto' : sticky_height_3 + 'px'}};">
+				<slot wx:if="{{!sticky_3}}" name="sticky_3" />
+			</view>
 			<view id="__content" class="__vertical">
 				<slot name="content"></slot>
 			</view>
@@ -45,8 +44,8 @@
 			<view id="__footer" class="__wrapper">
 				<slot name="footer"></slot>
 			</view>
-			<view id="__footer_space" style="width:100%;height:{{crossBoundaryReboundHeight != 0 ?  2 * footer_height+ 'px' : footer_height +'px' }};" />
-			<view id="__over_page_footer_space" wx:if="{{over_page && crossBoundaryReboundHeight == 0 && loadEnable }}" style="width:100%;height:{{over_page_footer_height}}px;" />
+			<view id="__footer_space" style="width:100%;height:{{!footer_exist ?  2 * footer_height+ 'px' : footer_height +'px' }};" />
+			<view id="__over_page_footer_space" wx:if="{{over_page && footer_exist && loadEnable }}" style="width:100%;height:{{over_page_footer_height}}px;" />
 			<view style="height:{{bottomSize}}rpx" />
 		</scroll-view>
 	</movable-view>

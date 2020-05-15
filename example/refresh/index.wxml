@@ -1,4 +1,4 @@
- <refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh-success-height="70" load-enable="{{false}}">
+ <refresh bind:refresh="onRefresh" refresh='{{refresh}}' bind:refresh-status="onRefreshStatus" refresh-success-height="70" cross-boundary-rebound-height="140">
  	<default-header slot="header" status="{{refreshStatus}}" />
  	<view slot="content" class="content">
  		<view class="book" wx:for="{{articles}}">
@@ -8,5 +8,5 @@
  				<view class="book-description">{{item.description}}</view>
  			</view>
  		</view>
- 	</view> 
+ 	</view>
  </refresh>

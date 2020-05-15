@@ -1,5 +1,4 @@
- <refresh load-success-height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" refresh-enable="{{false}}">
- 	<default-header slot="header" status="{{refreshStatus}}" />
+ <refresh load-success-height="70" bind:load="onLoadmore" load="{{load}}" bind:load-status="onLoadStatus" cross-boundary-rebound-height="140">
  	<view slot="content" class="content">
  		<view class="book" wx:for="{{articles}}">
  			<image class="book-cover" src="{{item.cover}}" />

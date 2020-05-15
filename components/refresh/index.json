@@ -1,7 +1,6 @@
 {
 	"disableScroll": true,
 	"component": true,
-	"usingComponents": {
-		"sticky":"./sticky/index"
+	"usingComponents": { 
 	}
 }

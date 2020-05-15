@@ -6,14 +6,14 @@ Page({
 
 
   onLoadmore(e) {
-    var temp = app.loadArticle(10)
+    var temp =[]
     temp.forEach(item => {
       this.data.articles.push(item)
     });
     setTimeout(() => {
       this.setData({
         articles: this.data.articles,
-        load: 0,
+        load: 1,
       })
     }, 800)
   },
