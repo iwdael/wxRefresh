@@ -1,15 +1,17 @@
 {
-  "pages": ["example/cross-boundary-rebound-sticky/index",
+  "pages": [
     "example/index",
     "example/content-empty/index",
     "example/cross-boundary-rebound/index",
-    
+    "example/cross-boundary-rebound-sticky/index",
     "example/cross-boundary-rebound-sticky-2/index",
+    "example/cross-boundary-rebound-sticky-3/index",
     "example/load/index",
     "example/refresh/index",
     "example/refresh-load/index",
     "example/refresh-load-sticky/index",
-    "example/refresh-load-sticky-2/index"
+    "example/refresh-load-sticky-2/index",
+    "example/refresh-load-sticky-3/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

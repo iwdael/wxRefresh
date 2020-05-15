@@ -17,11 +17,17 @@ Page({
                 'title': '刷新加载-粘性-2',
                 'url': 'refresh-load-sticky-2'
             }, {
+                'title': '刷新加载-粘性-3',
+                'url': 'refresh-load-sticky-3'
+            }, {
                 'title': '越界回弹-粘性',
                 'url': 'cross-boundary-rebound-sticky'
             }, {
                 'title': '越界回弹-粘性2',
                 'url': 'cross-boundary-rebound-sticky-2'
+            }, {
+                'title': '越界回弹-粘性3',
+                'url': 'cross-boundary-rebound-sticky-3'
             }, {
                 'title': '刷新',
                 'url': 'refresh'

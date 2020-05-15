@@ -77,16 +77,22 @@ Component({
 		sticky_height_2: 0,
 		sticky_2: false,
 
+
+		//sticky_3
+		interval_height_3: 0,
+		sticky_height_3: 0,
+		sticky_3: false,
+
 		movable_height: 0,
 		movable_y: 0, //movable y方向的偏移量
 
 		//刷新  
 		header_height: 0,
-		refresh_status: 1, // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
+		refresh_state: 1, // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 
 		//加载
 		footer_height: 0,
-		load_status: 1, // 1: 上拉加载, 2: 松开加载, 3: 加载中, 4: 加载完成
+		load_state: 1, // 1: 上拉加载, 2: 松开加载, 3: 加载中, 4: 加载完成
 
 		//other 
 		over_page: false, //超过一页
@@ -116,32 +122,45 @@ Component({
 
 			this.createSelectorQuery().select("#__interval").boundingClientRect((__interval) => {
 				this.data.interval_height = __interval.height
+				this.setData({
+					interval_height: this.data.interval_height
+				})
 			}).exec();
-
-
 			this.createSelectorQuery().select("#__interval_2").boundingClientRect((__interval) => {
 				this.data.interval_height_2 = __interval.height
+				this.setData({
+					interval_height_2: this.data.interval_height_2
+				})
 			}).exec();
-
+			this.createSelectorQuery().select("#__interval_3").boundingClientRect((__interval) => {
+				this.data.interval_height_3 = __interval.height
+				this.setData({
+					interval_height_3: this.data.interval_height_3
+				})
+			}).exec();
 			this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
 				this.data.sticky_height = __sticky.height
 				this.setData({
-					sticky_height: this.data.sticky_height,
-					top_size_px: this.rpx2px(this.properties.topSize)
+					sticky_height: this.data.sticky_height
 				})
 			}).exec();
 
 			this.createSelectorQuery().select("#__sticky_2").boundingClientRect((__sticky) => {
 				this.data.sticky_height_2 = __sticky.height
 				this.setData({
-					sticky_height_2: this.data.sticky_height_2,
-					top_size_px: this.rpx2px(this.properties.topSize)
+					sticky_height_2: this.data.sticky_height_2
+				})
+			}).exec();
+
+			this.createSelectorQuery().select("#__sticky_3").boundingClientRect((__sticky) => {
+				this.data.sticky_height_3 = __sticky.height
+				this.setData({
+					sticky_height_3: this.data.sticky_height_3
 				})
 			}).exec();
 
 			this.createSelectorQuery().select("#__movable_view").boundingClientRect((__movable_view) => {
 				this.data.movable_height = __movable_view.height
-
 				this.setData({
 					movable_height: this.data.movable_height,
 				})
@@ -166,7 +185,7 @@ Component({
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 
 				this.data.content_height = __content.height
-				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.interval_height - this.data.interval_height_2 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
+				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.sticky_height_3 - this.data.interval_height - this.data.interval_height_2 - this.data.interval_height_3 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 				this.data.space_height = diff
 				if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
 					this.data.space_height = this.data.space_height - this.data.empty_height
@@ -184,10 +203,9 @@ Component({
 						space_height: this.data.space_height
 					})
 					this.triggerEvent("load-status", {
-						'status': 0
+						state: 0
 					}, {})
 				}
-
 				if (this.properties.crossBoundaryReboundHeight > 0 && (this.data.footer_height == 0 || this.data.header_height == 0)) {
 					if (this.data.header_height == 0)
 						this.data.header_height = this.rpx2px(this.properties.crossBoundaryReboundHeight) / 2
@@ -206,6 +224,12 @@ Component({
 						}, 50)
 					})
 				}
+				this.setData({
+					header_height: this.data.header_height,
+					top_size_px: this.rpx2px(this.properties.topSize),
+					sticky_height: this.data.sticky_height,
+					sticky_height_2: this.data.sticky_height_2
+				})
 				if (this.data.header_height == 0)
 					console.error('You should add header for wxRefresh. Click here(https://github.com/hacknife/wxRefresh)')
 				if (this.data.footer_height == 0)
@@ -213,8 +237,11 @@ Component({
 				var info = {
 					"header_height": this.data.header_height,
 					"interval_height": this.data.interval_height,
-					"sticky_height": this.data.sticky_height,
 					"interval_height_2": this.data.interval_height_2,
+					"interval_height_3": this.data.interval_height_2,
+					"sticky_height": this.data.sticky_height,
+					"sticky_height_2": this.data.sticky_height_2,
+					"sticky_height_3": this.data.sticky_height_2,
 					"scroll_height": this.data.scroll_height,
 					"content_height": this.data.content_height,
 					"footer_height": this.data.footer_height,
@@ -222,72 +249,89 @@ Component({
 					"empty_height": this.data.empty_height,
 					"space_height": this.data.space_height,
 				}
-				// console.log(info)
+				console.log(info)
 				this.triggerEvent("info", info, {})
 			}).exec();
 
 
 			this.triggerEvent("refresh-status", {
-				'status': this.properties.refreshEnable ? 1 : 0
+				state: this.properties.refreshEnable ? 1 : 0
 			}, {})
 			this.triggerEvent("load-status", {
-				'status': this.properties.loadEnable ? 1 : 0
+				state: this.properties.loadEnable ? 1 : 0
 			}, {})
 		},
 		onMovableChange(e) {
 			this.triggerEvent("drag", {
 				space: -2 * this.data.header_height - e.detail.y
 			}, {})
-			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
 			var y = e.detail.y
-			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
-				if (this.data.refresh_status != 2) {
-					this.data.refresh_status = 2
-					this.triggerEvent("refresh-status", {
-						'status': this.data.refresh_status, 
-					}, {})
-				} 
-			} else if (y >= -2 * this.data.header_height && y < -this.data.header_height && this.properties.refreshEnable) { // | |-| | |
-				if (this.data.refresh_status != 1) {
-					this.data.refresh_status = 1
-					this.triggerEvent("refresh-status", {
-						'status': this.data.refresh_status
-					}, {})
+			if (this.data.refresh_state > 2 || this.data.load_state > 2) { // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
+				if (this.data.refresh_state == 3) {
+					this.triggerEvent('refresh-status', {
+						state: this.data.refresh_state,
+						percent: (y + this.data.header_height) / (this.data.header_height * 1.00)
+					})
+				} else if (this.data.refresh_state > 3) {
+					this.triggerEvent('refresh-status', {
+						state: this.data.refresh_state,
+						percent: (y + 2 * this.data.header_height) / (this.data.header_height * 1.00)
+					})
 				}
+				if (this.data.load_state == 3) {
+					this.triggerEvent('load-status', {
+						state: this.data.load_state,
+						percent: (-2 * this.data.header_height - this.data.footer_height - y) / (this.data.header_height * 1.00)
+					})
+				} else if (this.data.load_state > 3) {
+					this.triggerEvent('load-status', {
+						state: this.data.load_state,
+						percent: (-2 * this.data.header_height - y) / (this.data.header_height * 1.00)
+					})
+				}
+				return
+			}
+
+			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
+				if (this.data.refresh_state != 2) {
+					this.data.refresh_state = 2
+				}
+				this.triggerEvent("refresh-status", {
+					state: this.data.refresh_state,
+					percent: (y + this.data.header_height) / (this.data.header_height * 1.00)
+				}, {})
+			} else if (y >= -2 * this.data.header_height && y < -this.data.header_height && this.properties.refreshEnable) { // | |-| | |
+				if (this.data.refresh_state != 1) {
+					this.data.refresh_state = 1
+				}
+				this.triggerEvent("refresh-status", {
+					state: this.data.refresh_state,
+					percent: (y + 2 * this.data.header_height) / (this.data.header_height * 1.00)
+				}, {})
 
 			} else if (y >= -2 * this.data.header_height - this.data.footer_height && y < -2 * this.data.header_height && !this.data.over_page && this.properties.loadEnable) { // | | |-| |
-				if (this.data.load_status != 1) {
-					this.data.load_status = 1
-					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
-						// this.setData({
-						// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
-						// })
-					} else {
-						this.triggerEvent("load-status", {
-							'status': this.data.load_status
-						}, {})
-					}
+				if (this.data.load_state != 1) {
+					this.data.load_state = 1
 				}
-			} else if (y >= -2 * this.data.header_height - 2 * this.data.footer_height && y < -2 * this.data.header_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
-				if (this.data.load_status != 2) {
-					this.data.load_status = 2
-					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
-						// this.setData({
-						// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
-						// })
-					} else {
-						this.triggerEvent("load-status", {
-							'status': this.data.load_status
-						}, {})
-					}
+				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {} else {
+					this.triggerEvent("load-status", {
+						state: this.data.load_state,
+						percent: (-2 * this.data.header_height - y) / (this.data.header_height * 1.00)
+					}, {})
 				}
-			} else if (y >= -2 * this.data.header_height - 2 * this.data.footer_height && y < -2 * this.data.header_height && this.data.over_page && this.properties.loadEnable) {
-				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
-					// this.setData({
-					// 	over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
-					// })
-				} else {
-					this.data.load_status = 1
+			} else if (y < -2 * this.data.header_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
+				if (this.data.load_state != 2) {
+					this.data.load_state = 2
+				}
+				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {} else {
+					this.triggerEvent("load-status", {
+						state: this.data.load_state,
+						percent: (-2 * this.data.header_height - this.data.footer_height - y) / (this.data.header_height * 1.00)
+					}, {})
+				}
+			} else if (y < -2 * this.data.header_height && this.data.over_page && this.properties.loadEnable) {
+				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {} else {
+					this.data.load_state = 1
 					this.properties.load = 0
 					this.onScrollBottom('')
 					this.setData({
@@ -298,40 +342,39 @@ Component({
 		},
 		onMovableTouchEnd(e) {
 			this.triggerEvent("drag-end")
-			if (this.data.refresh_status > 2 || this.data.load_status > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
-			if (this.data.refresh_status == 1 && this.data.load_status == 1) {
+			if (this.data.refresh_state > 2 || this.data.load_state > 2) return // 1: 下拉刷新, 2: 松开更新, 3: 刷新中, 4: 刷新完成
+			if (this.data.refresh_state == 1 && this.data.load_state == 1) {
 				this.setData({
 					movable_y: -2 * this.data.header_height
 				})
-			} else if (this.data.refresh_status == 2) {
-				this.data.refresh_status = 3
+			} else if (this.data.refresh_state == 2) {
+				this.data.refresh_state = 3
 				this.triggerEvent("refresh-status", {
-					'status': this.data.refresh_status
+					state: this.data.refresh_state,
 				}, {})
 				this.properties.refresh = 100
 				this.properties.load = 0
 				this.triggerEvent("load-status", {
-					'status': 1
+					state: 1,
 				}, {})
 				this.setData({
 					movable_y: -this.data.header_height,
-					refresh_status: this.data.refresh_status,
+					refresh_state: this.data.refresh_state,
 					over_page_footer_height: this.data.footer_height
 				})
-
 				this.triggerEvent('refresh');
-			} else if (this.data.load_status == 2 && (this.properties.load != 1 || this.properties.noDataToLoadMoreEnable)) {
-				this.data.load_status = 3
+			} else if (this.data.load_state == 2 && (this.properties.load != 1 || this.properties.noDataToLoadMoreEnable)) {
+				this.data.load_state = 3
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status
+					state: this.data.load_state
 				}, {})
 				this.properties.load = 100
 				this.setData({
 					movable_y: -2 * this.data.header_height - this.data.footer_height,
-					load_status: this.data.load_status,
+					load_state: this.data.load_state,
 				})
 				this.triggerEvent('load');
-			} else if (this.data.load_status == 2) {
+			} else if (this.data.load_state == 2) {
 				this.setData({
 					movable_y: -2 * this.data.header_height
 				})
@@ -366,12 +409,8 @@ Component({
 			}
 		},
 		onPinSticky(e) {
-			// console.log(e)
 			var id = e.currentTarget.id
 			var sticky = e.detail.sticky
-			// console.log('sticky id  ---  ', id);
-			// console.log('sticky val  ---  ', sticky);
-
 			if (sticky) {
 				this.triggerEvent("sticky", {
 					"id": id,
@@ -387,6 +426,11 @@ Component({
 				this.data.sticky_2 = sticky
 				this.setData({
 					sticky_2: this.data.sticky_2
+				})
+			} else if (id == '__sticky_3' && this.data.sticky_3!= sticky) {
+				this.data.sticky_3 = sticky
+				this.setData({
+					sticky_3: this.data.sticky_3
 				})
 			}
 		},
@@ -406,36 +450,36 @@ Component({
 			if (this.properties.refresh == 100) return
 
 			if (this.data.refreshSuccessHeight != 0) {
-				this.data.refresh_status = this.properties.refresh == 0 ? 4 : (this.properties.refresh == 1 ? 5 : 6)
+				this.data.refresh_state = this.properties.refresh == 0 ? 4 : (this.properties.refresh == 1 ? 5 : 6)
 				this.triggerEvent("refresh-status", {
-					'status': this.data.refresh_status
+					state: this.data.refresh_state
 				}, {})
 				this.setData({
 					movable_y: -2 * this.data.header_height + this.rpx2px(this.properties.refreshSuccessHeight),
-					refresh_status: this.data.refresh_status
+					refresh_state: this.data.refresh_state
 				})
 				setTimeout(() => {
 					this.setData({
 						movable_y: -2 * this.data.header_height,
 					})
 					setTimeout(() => {
-						this.data.refresh_status = 1
+						this.data.refresh_state = 1
 						this.triggerEvent("refresh-status", {
-							'status': this.data.refresh_status
+							state: this.data.refresh_state
 						}, {})
 						this.setData({
-							refresh_status: this.data.refresh_status
+							refresh_state: this.data.refresh_state
 						})
 					}, 1000)
 				}, this.properties.duration)
 			} else {
-				this.data.refresh_status = 1
+				this.data.refresh_state = 1
 				this.triggerEvent("refresh-status", {
-					'status': this.data.refresh_status
+					state: this.data.refresh_state
 				}, {})
 				this.setData({
 					movable_y: -2 * this.data.header_height,
-					refresh_status: this.data.refresh_status
+					refresh_state: this.data.refresh_state
 				})
 			}
 
@@ -456,23 +500,23 @@ Component({
 
 			if (this.properties.load == 100) return
 			if (this.data.loadSuccessHeight != 0 && !this.data.over_page) {
-				this.data.load_status = this.properties.load == 0 ? 4 : (this.properties.load == 1 ? 5 : 6)
+				this.data.load_state = this.properties.load == 0 ? 4 : (this.properties.load == 1 ? 5 : 6)
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status
+					state: this.data.load_state
 				}, {})
 
 				this.setData({
 					movable_y: -2 * this.data.header_height - this.rpx2px(this.properties.loadSuccessHeight),
-					load_status: this.data.load_status
+					load_state: this.data.load_state
 				})
 				setTimeout(() => {
 					this.setData({
 						movable_y: -2 * this.data.header_height,
 					})
 					setTimeout(() => {
-						this.data.load_status = 1
+						this.data.load_state = 1
 						this.setData({
-							load_status: this.data.load_status
+							load_state: this.data.load_state
 						})
 						if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 							this.setData({
@@ -480,19 +524,19 @@ Component({
 							})
 						} else {
 							this.triggerEvent("load-status", {
-								'status': this.data.load_status
+								state: this.data.load_state
 							}, {})
 						}
 					}, 1000)
 				}, this.properties.duration)
 			} else if (this.data.loadSuccessHeight != 0 && this.data.over_page) {
 				if (this.properties.load != 0) {
-					this.data.load_status = this.properties.load == 1 ? 5 : 6
+					this.data.load_state = this.properties.load == 1 ? 5 : 6
 					this.triggerEvent("load-status", {
-						'status': this.data.load_status
+						state: this.data.load_state
 					}, {})
 					this.setData({
-						load_status: this.data.load_status
+						load_state: this.data.load_state
 					})
 					//当刷新完成之前，布局由于手动操作滚上去。
 
@@ -509,18 +553,18 @@ Component({
 							})
 						}, 500)
 					}
-					this.data.load_status = 1
+					this.data.load_state = 1
 					this.setData({
-						load_status: this.data.load_status
+						load_state: this.data.load_state
 					})
 
 				} else {
-					this.data.load_status = 1
+					this.data.load_state = 1
 					this.triggerEvent("load-status", {
-						'status': this.data.load_status
+						state: this.data.load_state
 					}, {})
 					this.setData({
-						load_status: this.data.load_status
+						load_state: this.data.load_state
 					})
 				}
 			} else if (this.data.loadSuccessHeight == 0 && this.data.over_page) {
@@ -528,12 +572,12 @@ Component({
 					scrollSpace: -this.data.space_height + this.rpx2px(this.properties.loadSuccessHeight),
 				})
 				setTimeout(() => {
-					this.data.load_status = 1
+					this.data.load_state = 1
 					this.setData({
-						load_status: this.data.load_status,
+						load_state: this.data.load_state,
 					})
 					this.triggerEvent("load-status", {
-						'status': this.data.load_status
+						state: this.data.load_state
 					}, {})
 					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						this.setData({
@@ -543,16 +587,16 @@ Component({
 				}, 500)
 
 			} else if (this.data.loadSuccessHeight == 0 && !this.data.over_page) {
-				this.data.load_status = 1
+				this.data.load_state = 1
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status,
+					state: this.data.load_state,
 				}, {})
 				this.setData({
 					movable_y: -2 * this.data.header_height,
 				})
 				setTimeout(() => {
 					this.setData({
-						load_status: this.data.load_status
+						load_state: this.data.load_state
 					})
 				}, 800)
 			}
@@ -573,20 +617,20 @@ Component({
 			if (!this.properties.loadEnable) return
 			if (this.properties.load == 100 || (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable)) return
 			this.properties.load = 100
-			if (this.data.load_status == 1) {
-				this.data.load_status = 2
+			if (this.data.load_state == 1) {
+				this.data.load_state = 2
 				this.setData({
-					load_status: this.data.load_status
+					load_state: this.data.load_state
 				})
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status
+					state: this.data.load_state
 				}, {})
-				this.data.load_status = 3
+				this.data.load_state = 3
 				this.setData({
-					load_status: this.data.load_status
+					load_state: this.data.load_state
 				})
 				this.triggerEvent("load-status", {
-					'status': this.data.load_status
+					state: this.data.load_state
 				}, {})
 				this.triggerEvent('load');
 			}

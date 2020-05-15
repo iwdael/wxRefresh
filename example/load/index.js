@@ -19,9 +19,10 @@ Page({
   },
 
 
+ 
   onLoadStatus(e) {
     this.setData({
-      "loadStatus": e.detail.status
+      "loadStatus": e.detail
     })
   },
 

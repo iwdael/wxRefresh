@@ -1,10 +1,10 @@
 const app = getApp()
 Page({
   data: {
-    articles: app.data.articles
+    articles: app.data.articles.slice(0, 3)
   },
   onRefresh(e) {
-    this.data.articles = app.loadArticle(10)
+    this.data.articles = app.loadArticle(10).slice(0, 3)
     setTimeout(() => {
       this.setData({
         articles: this.data.articles,
@@ -21,7 +21,7 @@ Page({
     setTimeout(() => {
       this.setData({
         articles: this.data.articles,
-        load: 1,
+        load: 0,
       })
     }, 800)
   },
@@ -29,12 +29,12 @@ Page({
 
   onRefreshStatus(e) {
     this.setData({
-      "refreshStatus": e.detail.status
+      "refreshStatus": e.detail
     })
   },
   onLoadStatus(e) {
     this.setData({
-      "loadStatus": e.detail.status
+      "loadStatus": e.detail
     })
   },
 

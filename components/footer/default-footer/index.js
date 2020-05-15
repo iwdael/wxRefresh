@@ -4,8 +4,8 @@
     */
    properties: {
      status: {
-       type: Number,
-       value: 1,
+       type: Object,
+       value: null,
        observer: 'statusObserver'
      }
    },
@@ -16,9 +16,9 @@
 
    methods: {
      statusObserver() {
-      //  console.log('load statusObserver---', this.properties.status); 
+       console.log('load statusObserver---', this.properties.status); 
        this.setData({
-        loadStatus: this.properties.status,
+        loadStatus: this.properties.status.state,
        })
      },
    }

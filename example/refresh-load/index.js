@@ -26,12 +26,12 @@ Page({
   },
   onRefreshStatus(e) {
     this.setData({
-      "refreshStatus": e.detail.status
+      "refreshStatus": e.detail
     })
   },
   onLoadStatus(e) {
     this.setData({
-      "loadStatus": e.detail.status
+      "loadStatus": e.detail
     })
   },
   onRefreshInfo(e) {

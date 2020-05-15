@@ -16,7 +16,8 @@ Page({
 
   onRefreshStatus(e) {
     this.setData({
-      "refreshStatus": e.detail.status
+      "refreshStatus": e.detail
     })
-  }, 
+  },
+ 
 })
