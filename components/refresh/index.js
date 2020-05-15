@@ -448,33 +448,7 @@ Component({
 
 
 			}
-		},
-		onPinSticky(e) {
-			var id = e.currentTarget.id
-			var sticky = e.detail.sticky
-			if (sticky) {
-				this.triggerEvent("sticky", {
-					"id": id,
-					"percent": 1
-				}, {})
-			}
-			if (id == '__sticky' && this.data.sticky != sticky) {
-				this.data.sticky = sticky
-				this.setData({
-					sticky: this.data.sticky
-				})
-			} else if (id == '__sticky_2' && this.data.sticky_2 != sticky) {
-				this.data.sticky_2 = sticky
-				this.setData({
-					sticky_2: this.data.sticky_2
-				})
-			} else if (id == '__sticky_3' && this.data.sticky_3 != sticky) {
-				this.data.sticky_3 = sticky
-				this.setData({
-					sticky_3: this.data.sticky_3
-				})
-			}
-		},
+		}, 
 		refreshObserver() {
 			this.rebuild(true)
 			if (this.properties.refresh == 100 && !this.properties.load) {
