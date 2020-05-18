@@ -25,3 +25,18 @@ wxRefresh能够满足大多数微信小程序列表的需求，减免了繁琐�
 |scroll-space|string|0px|否|页面滚动的距离|若填写纯数字默认为px|
 |rebuild|boolean|false|否|是否重新测量各组件|非slot='content'，高度发生改变时，设置为true|
 |no-data-to-load-more-enable|boolean|false|否|加载控制|load=1，即没有更多数据，是否能够上拉加载|
+
+|事件|类型|默认值|必填|功能|备注|
+|:------:|:------:|:------:|:------:|:------:|:------:|
+|bind:refresh|eventhandle||否|刷新|刷新时被触发，此时属性refresh自动置为100|
+|bind:load|eventhandle||否|加载|加载时被触发，此时属性load自动置为100|
+|bind:refresh-status|eventhandle||否|下拉|下拉时被触发|
+|bind:load-status|eventhandle||否|上拉|上拉时被触发|
+|bind:info|eventhandle||否|高度集合|组件加载完成时触发，各个组件的高度| 
+|bind:scroll|eventhandle||否|滚动距离|页面滚动时触发，event.detail={space}|
+|bind:drag|eventhandle||否|拖拽距离|页面拖拽时触发，event.detail={space}|
+|bind:scroll-drag|eventhandle||否|距离|页面滚动或拖拽时触发，event.detail={space}|
+|bind:drag-end|eventhandle||否|结束触发|页面滚动或拖拽结束时触发|
+|bind:sticky|eventhandle||否|滚动|粘性布局滚动时触发,event.detail={id,percent}|
+|bind:top|eventhandle||否|滚动|滚动到顶部触发|
+|bind:bottom|eventhandle||否|滚动|滚动到底部触发|
