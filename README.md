@@ -54,3 +54,16 @@ wxRefresh能够满足大多数微信小程序列表的需求，减免了繁琐�
 |state|4|刷新完成/加载完成|
 |state|5|刷新完成，且没有加载到数据/加载完成，且没有加载到数据|
 |state|6|刷新失败/加载失败|
+
+## slot name
+|name|必填|说明|
+|:------:|:------:|:------:|
+|header|否|刷新头，缺失时请添加属性cross-boundary-rebound-height|
+|footer|否|加载头，缺失时请添加属性cross-boundary-rebound-height|
+|interval|否|粘性布局以上可滚动出屏幕的Slot|
+|sticky|否|粘性布局|
+|interval_2|否|粘性布局以上可滚动出屏幕的Slot|
+|sticky_2|否|粘性布局|
+|interval_3|否|粘性布局以上可滚动出屏幕的Slot|
+|sticky_3|否|粘性布局|
+|content|否|通常用于列表|
