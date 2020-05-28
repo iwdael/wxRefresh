@@ -285,6 +285,9 @@ Component({
 			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
 				if (this.data.refresh_state != 2) {
 					this.data.refresh_state = 2
+					this.triggerEvent("refresh-state", {
+						state: this.data.refresh_state
+					}, {})
 				}
 				this.triggerEvent("refresh-status", {
 					state: this.data.refresh_state,
@@ -293,6 +296,9 @@ Component({
 			} else if (y >= -2 * this.data.header_height && y < -this.data.header_height && this.properties.refreshEnable) { // | |-| | |
 				if (this.data.refresh_state != 1) {
 					this.data.refresh_state = 1
+					this.triggerEvent("refresh-state", {
+						state: this.data.refresh_state
+					}, {})
 				}
 				this.triggerEvent("refresh-status", {
 					state: this.data.refresh_state,
@@ -302,6 +308,11 @@ Component({
 			} else if (y >= -2 * this.data.header_height - this.data.footer_height && y < -2 * this.data.header_height && !this.data.over_page && this.properties.loadEnable) { // | | |-| |
 				if (this.data.load_state != 1) {
 					this.data.load_state = 1
+					if (!(this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable)) {
+						this.triggerEvent("load-state", {
+							state: this.data.load_state
+						}, {})
+					}
 				}
 				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {} else {
 					this.triggerEvent("load-status", {
@@ -312,6 +323,11 @@ Component({
 			} else if (y < -2 * this.data.header_height - this.data.footer_height && !this.data.over_page && this.properties.loadEnable) { // | | | |-|
 				if (this.data.load_state != 2) {
 					this.data.load_state = 2
+					if (!(this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable)) {
+						this.triggerEvent("load-state", {
+							state: this.data.load_state
+						}, {})
+					}
 				}
 				if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {} else {
 					this.triggerEvent("load-status", {
@@ -339,11 +355,17 @@ Component({
 				})
 			} else if (this.data.refresh_state == 2) {
 				this.data.refresh_state = 3
+				this.triggerEvent("refresh-state", {
+					state: this.data.refresh_state
+				}, {})
 				this.triggerEvent("refresh-status", {
 					state: this.data.refresh_state,
 				}, {})
 				this.properties.refresh = 100
 				this.properties.load = 0
+				this.triggerEvent("load-state", {
+					state: 1,
+				}, {})
 				this.triggerEvent("load-status", {
 					state: 1,
 				}, {})
@@ -355,6 +377,9 @@ Component({
 				this.triggerEvent('refresh');
 			} else if (this.data.load_state == 2 && (this.properties.load != 1 || this.properties.noDataToLoadMoreEnable)) {
 				this.data.load_state = 3
+				this.triggerEvent("load-state", {
+					state: this.data.load_state
+				}, {})
 				this.triggerEvent("load-status", {
 					state: this.data.load_state
 				}, {})
@@ -482,6 +507,9 @@ Component({
 
 			if (this.data.refreshSuccessHeight != 0) {
 				this.data.refresh_state = this.properties.refresh == 0 ? 4 : (this.properties.refresh == 1 ? 5 : 6)
+				this.triggerEvent("refresh-state", {
+					state: this.data.refresh_state
+				}, {})
 				this.triggerEvent("refresh-status", {
 					state: this.data.refresh_state
 				}, {})
@@ -495,6 +523,9 @@ Component({
 					})
 					setTimeout(() => {
 						this.data.refresh_state = 1
+						this.triggerEvent("refresh-state", {
+							state: this.data.refresh_state
+						}, {})
 						this.triggerEvent("refresh-status", {
 							state: this.data.refresh_state
 						}, {})
@@ -505,6 +536,9 @@ Component({
 				}, this.properties.duration)
 			} else {
 				this.data.refresh_state = 1
+				this.triggerEvent("refresh-state", {
+					state: this.data.refresh_state
+				}, {})
 				this.triggerEvent("refresh-status", {
 					state: this.data.refresh_state
 				}, {})
@@ -528,10 +562,12 @@ Component({
 				}, 500)
 				return
 			}
-
 			if (this.properties.load == 100) return
 			if (this.data.loadSuccessHeight != 0 && !this.data.over_page) {
 				this.data.load_state = this.properties.load == 0 ? 4 : (this.properties.load == 1 ? 5 : 6)
+				this.triggerEvent("load-state", {
+					state: this.data.load_state
+				}, {})
 				this.triggerEvent("load-status", {
 					state: this.data.load_state
 				}, {})
@@ -554,6 +590,9 @@ Component({
 								over_page_footer_height: this.rpx2px(this.properties.loadSuccessHeight)
 							})
 						} else {
+							this.triggerEvent("load-state", {
+								state: this.data.load_state
+							}, {})
 							this.triggerEvent("load-status", {
 								state: this.data.load_state
 							}, {})
@@ -563,20 +602,21 @@ Component({
 			} else if (this.data.loadSuccessHeight != 0 && this.data.over_page) {
 				if (this.properties.load != 0) {
 					this.data.load_state = this.properties.load == 1 ? 5 : 6
+					this.triggerEvent("load-state", {
+						state: this.data.load_state
+					}, {})
 					this.triggerEvent("load-status", {
 						state: this.data.load_state
 					}, {})
 					this.setData({
 						load_state: this.data.load_state
 					})
-					//当刷新完成之前，布局由于手动操作滚上去。
-
+					//当刷新完成之前，布局由于手动操作滚上去。 
 					if (this.data.current_scroll > this.rpx2px(this.properties.loadSuccessHeight) - this.data.space_height) {
 						this.setData({
 							scrollSpace: -this.data.space_height + this.rpx2px(this.properties.loadSuccessHeight)
 						})
-					}
-
+					} 
 					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						setTimeout(() => {
 							this.setData({
@@ -591,6 +631,9 @@ Component({
 
 				} else {
 					this.data.load_state = 1
+					this.triggerEvent("load-state", {
+						state: this.data.load_state
+					}, {})
 					this.triggerEvent("load-status", {
 						state: this.data.load_state
 					}, {})
@@ -653,6 +696,9 @@ Component({
 				this.setData({
 					load_state: this.data.load_state
 				})
+				this.triggerEvent("load-state", {
+					state: this.data.load_state
+				}, {})
 				this.triggerEvent("load-status", {
 					state: this.data.load_state
 				}, {})
@@ -661,6 +707,9 @@ Component({
 					load_state: this.data.load_state
 				})
 				this.triggerEvent("load-status", {
+					state: this.data.load_state
+				}, {})
+				this.triggerEvent("load-state", {
 					state: this.data.load_state
 				}, {})
 				this.triggerEvent('load');
