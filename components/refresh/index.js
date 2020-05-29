@@ -62,6 +62,16 @@ Component({
 			value: false,
 			type: Boolean,
 		},
+		scrollToTop: {
+			value: false,
+			type: Boolean,
+			observer: "scrollToTopObserver"
+		},
+		scrollToBottom: {
+			value: false,
+			type: Boolean,
+			observer: "scrollToBottomObserver"
+		}
 	},
 	options: {
 		multipleSlots: true,
@@ -229,11 +239,11 @@ Component({
 					"empty_height": this.data.empty_height,
 					"space_height": this.data.space_height,
 				}
-				// console.log(info)
+				// console.log('source-----', info)
 				if (this.data.content_height > 0) {
 					setTimeout(() => {
 						this.rebuild(true)
-					}, 50)
+					}, 500)
 				}
 				this.triggerEvent("info", info, {})
 			}).exec();
@@ -616,7 +626,7 @@ Component({
 						this.setData({
 							scrollSpace: -this.data.space_height + this.rpx2px(this.properties.loadSuccessHeight)
 						})
-					} 
+					}
 					if (this.properties.load == 1 && !this.properties.noDataToLoadMoreEnable) {
 						setTimeout(() => {
 							this.setData({
@@ -718,7 +728,22 @@ Component({
 		onScrollTop(e) {
 			this.triggerEvent("top");
 		},
+		scrollToTopObserver() {
+			this.setData({
+				scrollSpace: '0px'
+			})
+			this.properties.scrollToTop = false
+		},
+		scrollToBottomObserver() {
+			this.rebuild(true)
+			this.properties.scrollToBottom = false
+			setTimeout(() => {
+				this.setData({
+					scrollSpace: (-this.data.space_height) + 'px'
+				})
+			}, 500)
 
+		},
 		rebuild(_is_refresh) {
 			if (!this.data.over_page || _is_refresh || (this.data.over_page && this.data.content_height == 0) || (this.data.over_page && this.data.loadEnable)) {
 				this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
