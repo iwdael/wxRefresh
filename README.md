@@ -34,7 +34,9 @@ wxRefresh能够满足大多数微信小程序列表的需求，减免了繁琐�
 |bind:refresh|eventhandle||否|刷新|刷新时被触发，此时属性refresh自动置为100|
 |bind:load|eventhandle||否|加载|加载时被触发，此时属性load自动置为100|
 |bind:refresh-status|eventhandle||否|下拉|下拉时被触发|
+|bind:refresh-state|eventhandle||否|下拉|下拉时被触发|
 |bind:load-status|eventhandle||否|上拉|上拉时被触发|
+|bind:load-state|eventhandle||否|上拉|上拉时被触发|
 |bind:info|eventhandle||否|高度集合|组件加载完成时触发，各个组件的高度| 
 |bind:scroll|eventhandle||否|滚动距离|页面滚动时触发，event.detail={space}|
 |bind:drag|eventhandle||否|拖拽距离|页面拖拽时触发，event.detail={space}|
@@ -44,10 +46,10 @@ wxRefresh能够满足大多数微信小程序列表的需求，减免了繁琐�
 |bind:top|eventhandle||否|滚动|滚动到顶部触发|
 |bind:bottom|eventhandle||否|滚动|滚动到底部触发|
 
-### refresh-status/load-status 返回的detail表示刷新状态
+### refresh-status/load-status/refresh-state/load-state 返回的detail表示刷新状态
 |字段|值|说明|
 |:------:|:------:|:------:|
-|percent|0%|当前状态的百分比|
+|percent|0%|当前状态的百分比、refresh-status/load-status无此状态|
 |state|1|默认状态，下拉刷新、上拉加载|
 |state|2|松手刷新/松手加载|
 |state|3|刷新中/加载中|
