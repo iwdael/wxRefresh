@@ -289,8 +289,7 @@ Component({
 				state: this.properties.loadEnable ? 1 : 0
 			}, {})
 		},
-		headerBelow(state) {
-			console.log("state:"+state); 
+		headerBelow(state) { 
 			this.data.sticky = state
 			this.data.interval = state
 			this.data.sticky_2 = state
