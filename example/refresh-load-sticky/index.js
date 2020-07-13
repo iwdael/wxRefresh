@@ -38,8 +38,6 @@ Page({
     }) 
   },
 
-  onDrag(e){
-      console.log(e.detail.space);
-      
+  onDrag(e){ 
   },
 })

@@ -8,29 +8,29 @@
 		<slot wx:if="{{sticky_3}}" name="sticky_3" />
 	</view>
 	<movable-view id="__movable_view" class="__movable_view" disabled="{{ refresh_state >= 3 || load_state >= 3 }}" direction="vertical" bind:change="onMovableChange" bind:touchend="onMovableTouchEnd" out-of-bounds="true" direction="vertical" style="height:calc(100vh + {{2 * header_height}}px + {{2 * footer_height}}px);" y="{{movable_y}}px" animation="{{animation}}">
-		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_state == 1 && load_state == 1) || ( refresh_state == 1 && over_page && load_state > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scrollSpace}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
+		<scroll-view id="__scroll_view" class="__scroll_view" scroll-y="{{( (refresh_state == 1 && load_state == 1) || ( refresh_state == 1 && over_page && load_state > 1 ) )? 'true' : ''}}" bindscroll="onScrollChanged" scroll-top="{{scrollSpace}}" bindscrolltolower="onScrollBottom" bindscrolltoupper="onScrollTop" upper-threshold="{{2}}px" lower-threshold="{{80}}rpx" scroll-with-animation="{{true}}">
+			<view style="height:{{header_below}}px"/> 
 			<view style="height:{{topSize}}rpx" />
 			<view id="__header_space" style="width:100%;height:{{ !header_exist  ?  2 * header_height+ 'px' : header_height +'px' }};" />
 			<view id="__header" class="__wrapper">
 				<slot name="header"></slot>
 			</view>
-			<view id="__interval" class="__wrapper" style="height:{{interval_height==0? 'auto' : interval_height + 'px'}};">
+			<view id="__interval" class="__wrapper" style="height:{{interval_height== -1 ? 'auto' : interval_height + 'px'}};">
 				<slot  wx:if="{{!interval}}"  name="interval"></slot>
 			</view>
-			<view id="__sticky" class="__wrapper" style="width:100%;height:{{sticky_height==0? 'auto' : sticky_height + 'px'}};">
+			<view id="__sticky" class="__wrapper" style="width:100%;height:{{sticky_height== -1 ? 'auto' : sticky_height + 'px'}};">
 				<slot wx:if="{{!sticky}}" name="sticky" />
-			</view>
-					
-			<view id="__interval_2" class="__wrapper" style="height:{{interval_height_2==0? 'auto' : interval_height_2 + 'px'}};">
+			</view> 
+			<view id="__interval_2" class="__wrapper" style="height:{{interval_height_2== -1 ? 'auto' : interval_height_2 + 'px'}};">
 				<slot wx:if="{{!interval_2}}"  name="interval_2"></slot>
 			</view>
-			<view id="__sticky_2" class="__wrapper" style="width:100%;height:{{sticky_height_2==0? 'auto' : sticky_height_2 + 'px'}};">
+			<view id="__sticky_2" class="__wrapper" style="width:100%;height:{{sticky_height_2==-1? 'auto' : sticky_height_2 + 'px'}};">
 				<slot wx:if="{{!sticky_2}}" name="sticky_2" />
 			</view>
-			<view id="__interval_3" class="__wrapper"  style="height:{{interval_height_3==0? 'auto' : interval_height_3 + 'px'}};">
+			<view id="__interval_3" class="__wrapper"  style="height:{{interval_height_3==-1 ? 'auto' : interval_height_3 + 'px'}};">
 				<slot wx:if="{{!interval_3}}"  name="interval_3"></slot>
 			</view>
-			<view id="__sticky_3" class="__wrapper" style="width:100%;height:{{sticky_height_3==0? 'auto' : sticky_height_3 + 'px'}};">
+			<view id="__sticky_3" class="__wrapper" style="width:100%;height:{{sticky_height_3==-1? 'auto' : sticky_height_3 + 'px'}};">
 				<slot wx:if="{{!sticky_3}}" name="sticky_3" />
 			</view>
 			<view id="__content" class="__vertical">

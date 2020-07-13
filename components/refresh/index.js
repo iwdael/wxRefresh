@@ -71,6 +71,10 @@ Component({
 			value: false,
 			type: Boolean,
 			observer: "scrollToBottomObserver"
+		},
+		headerBelowSticky: {
+			value: false,
+			type: Boolean
 		}
 	},
 	options: {
@@ -78,23 +82,29 @@ Component({
 	},
 	data: {
 		//sticky
-		interval_height: 0,
-		interval:false,
-		sticky_height: 0,
+		interval_height: -1,
+		_interval_height: -1,
+		interval: false,
+		sticky_height:  -1,
+		_sticky_height:  -1,
 		sticky: false,
 		sticky_offset: 0,
 
 		//sticky_2
-		interval_height_2: 0,
-		interval_2:false,
-		sticky_height_2: 0,
+		interval_height_2:-1,
+		_interval_height_2:-1,
+		interval_2: false,
+		sticky_height_2:-1,
+		_sticky_height_2:-1,
 		sticky_2: false,
 		sticky_offset_2: 0,
 
 		//sticky_3
-		interval_height_3: 0,
-		interval_3:false,
-		sticky_height_3: 0,
+		interval_height_3:-1,
+		_interval_height_3:-1,
+		interval_3: false,
+		sticky_height_3:-1,
+		_sticky_height_3:-1,
 		sticky_3: false,
 		sticky_offset_3: 0,
 
@@ -119,6 +129,9 @@ Component({
 		current_scroll: 0, //当前滚动的位置
 		empty_height: 0, // content 为空 展示的高度
 		sticky_container: null,
+		sticky_intervel: false,
+		header_below: 0,
+		_header_below: 0
 	},
 	methods: {
 		init() {
@@ -143,39 +156,45 @@ Component({
 			}).exec();
 			this.createSelectorQuery().select("#__interval").boundingClientRect((__interval) => {
 				this.data.interval_height = __interval.height
+				this.data._interval_height = __interval.height
 				this.data.sticky_offset = this.data.interval_height
 				this.setData({
-					interval_height:this.data.interval_height
+					interval_height: this.data.interval_height
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__interval_2").boundingClientRect((__interval) => {
 				this.data.interval_height_2 = __interval.height
+				this.data._interval_height_2 = __interval.height
 				this.data.sticky_offset_2 = this.data.interval_height + this.data.interval_height_2
 				this.setData({
-					interval_height_2:this.data.interval_height_2
+					interval_height_2: this.data.interval_height_2
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__interval_3").boundingClientRect((__interval) => {
 				this.data.interval_height_3 = __interval.height
+				this.data._interval_height_3 = __interval.height
 				this.data.sticky_offset_3 = this.data.interval_height + this.data.interval_height_2 + this.data.interval_height_3
 				this.setData({
-					interval_height_3:this.data.interval_height_3
+					interval_height_3: this.data.interval_height_3
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
 				this.data.sticky_height = __sticky.height
+				this.data._sticky_height = __sticky.height  
 				this.setData({
 					sticky_height: this.data.sticky_height
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__sticky_2").boundingClientRect((__sticky) => {
 				this.data.sticky_height_2 = __sticky.height
+				this.data._sticky_height_2 = __sticky.height
 				this.setData({
 					sticky_height_2: this.data.sticky_height_2
 				})
 			}).exec();
 			this.createSelectorQuery().select("#__sticky_3").boundingClientRect((__sticky) => {
 				this.data.sticky_height_3 = __sticky.height
+				this.data._sticky_height_3 = __sticky.height
 				this.setData({
 					sticky_height_3: this.data.sticky_height_3
 				})
@@ -210,6 +229,8 @@ Component({
 			}).exec();
 			this.createSelectorQuery().select("#__content").boundingClientRect((__content) => {
 				this.data.content_height = __content.height
+				this.data.header_below = this.data.interval_height + this.data.sticky_height + this.data.interval_height_2 + this.data.sticky_height_2 + this.data.interval_height_3 + this.data.sticky_height_3
+				this.data._header_below = this.data.header_below
 				var diff = this.data.scroll_height - this.data.content_height - this.data.sticky_height - this.data.sticky_height_2 - this.data.sticky_height_3 - this.data.interval_height - this.data.interval_height_2 - this.data.interval_height_3 - this.rpx2px(this.properties.topSize) - this.rpx2px(this.properties.bottomSize)
 				this.data.space_height = diff
 				if (this.data.empty_height > 0 && this.data.content_height == 0 && (this.data.space_height < this.data.empty_height)) {
@@ -250,8 +271,9 @@ Component({
 					"over_page": this.data.over_page,
 					"empty_height": this.data.empty_height,
 					"space_height": this.data.space_height,
+					"header_below":this.data.header_below,
 				}
-				// console.log('source-----', info)
+ 
 				if (this.data.content_height > 0) {
 					setTimeout(() => {
 						this.rebuild(true)
@@ -267,10 +289,50 @@ Component({
 				state: this.properties.loadEnable ? 1 : 0
 			}, {})
 		},
+		headerBelow(state) {
+			console.log("state:"+state); 
+			this.data.sticky = state
+			this.data.interval = state
+			this.data.sticky_2 = state
+			this.data.interval_2 = state
+			this.data.sticky_3 = state
+			this.data.interval_3 = state
+			this.data.sticky_intervel = state
+			var  interval_height = state ? 0 : this.data._interval_height
+			var  interval_height_2 = state ? 0 : this.data._interval_height_2
+			var  interval_height_3 = state ? 0 : this.data._interval_height_3
+			var  sticky_height = state ? 0 : this.data._sticky_height
+			var  sticky_height_2 = state ? 0 : this.data._sticky_height_2
+			var  sticky_height_3 = state ? 0 : this.data._sticky_height_3
+			var  header_below = state? this.data._header_below : 0   
+			var data = {
+				interval_height: interval_height ,
+				sticky_height:sticky_height,
+				interval_height_2:interval_height_2,
+				sticky_height_2: sticky_height_2,
+				interval_height_3: interval_height_3,
+				sticky_height_3: sticky_height_3,
+				header_below: header_below,
+				sticky: state,
+				interval: state,
+				sticky_2: state,
+				interval_2: state,
+				sticky_3: state,
+				interval_3: state, 
+			} 
+			this.setData(data) 
+		},
 		onMovableChange(e) {
+			var drag = -2 * this.data.header_height - e.detail.y
 			this.triggerEvent("drag", {
-				space: -2 * this.data.header_height - e.detail.y
+				space: drag
 			}, {})
+ 			if (this.properties.headerBelowSticky && drag < -0.15 && !this.data.sticky_intervel) {
+				this.headerBelow(true)
+			} else if (this.properties.headerBelowSticky && drag > -0.15 && this.data.sticky_intervel) {
+				this.headerBelow(false)
+			}
+
 			this.onScrollChanged({
 				detail: {
 					scrollTop: this.data.current_scroll - 2 * this.data.header_height - e.detail.y,
@@ -303,7 +365,6 @@ Component({
 				}
 				return
 			}
-
 			if (y >= -this.data.header_height && this.properties.refreshEnable) { // |-| | | |
 				if (this.data.refresh_state != 2) {
 					this.data.refresh_state = 2
@@ -419,16 +480,18 @@ Component({
 		},
 		onScrollChanged(e) {
 			var top = e.detail.scrollTop
+			var manual = true
 			if (e.detail.manual == null) {
 				this.data.current_scroll = top
 				this.triggerEvent("scroll", {
 					space: top
 				}, {})
+				manual = false
 			}
+
 			this.triggerEvent("scroll-drag", {
 				space: top
 			}, {})
-			// if (e.detail.manual != null) return
 			if (this.data.sticky_height != 0) {
 				if (top >= this.data.sticky_offset) {
 					if (this.data.sticky != true) {
@@ -443,7 +506,7 @@ Component({
 					}
 
 				} else {
-					if (this.data.sticky != false) {
+					if (this.data.sticky != false && (!this.properties.headerBelowSticky || !manual)) {
 						this.data.sticky = false
 						this.setData({
 							sticky: this.data.sticky
@@ -469,7 +532,7 @@ Component({
 						}, {})
 					}
 				} else {
-					if (this.data.sticky_2 != false) {
+					if (this.data.sticky_2 != false && (!this.properties.headerBelowSticky || !manual)) {
 						this.data.sticky_2 = false
 						this.setData({
 							sticky_2: this.data.sticky_2
@@ -495,7 +558,7 @@ Component({
 						}, {})
 					}
 				} else {
-					if (this.data.sticky_3 != false) {
+					if (this.data.sticky_3 != false && (!this.properties.headerBelowSticky || !manual)) {
 						this.data.sticky_3 = false
 						this.setData({
 							sticky_3: this.data.sticky_3
@@ -507,9 +570,6 @@ Component({
 						"percent": percent
 					}, {})
 				}
-
-
-
 			}
 		},
 		refreshObserver() {
@@ -738,7 +798,7 @@ Component({
 			}
 		},
 		onScrollTop(e) {
-			this.triggerEvent("top");
+			this.triggerEvent("top")
 		},
 		scrollToTopObserver() {
 			this.setData({
