@@ -1,7 +1,7 @@
 const app = getApp()
 Page({
   data: {
-    articles: app.data.articles.slice(0, 3)
+    articles: app.data.articles 
   },
   onRefresh(e) {
     this.data.articles = app.loadArticle(10) 
@@ -30,13 +30,16 @@ Page({
   onRefreshStatus(e) {
     this.setData({
       "refreshStatus": e.detail
-    })
-    console.log('refresh', e.detail.state);
+    }) 
   },
   onLoadStatus(e) {
     this.setData({
       "loadStatus": e.detail
-    })
-    console.log('load', e.detail.state);
+    }) 
+  },
+
+  onDrag(e){
+      console.log(e.detail.space);
+      
   },
 })

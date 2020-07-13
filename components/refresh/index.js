@@ -79,18 +79,21 @@ Component({
 	data: {
 		//sticky
 		interval_height: 0,
+		interval:false,
 		sticky_height: 0,
 		sticky: false,
 		sticky_offset: 0,
 
 		//sticky_2
 		interval_height_2: 0,
+		interval_2:false,
 		sticky_height_2: 0,
 		sticky_2: false,
 		sticky_offset_2: 0,
 
 		//sticky_3
 		interval_height_3: 0,
+		interval_3:false,
 		sticky_height_3: 0,
 		sticky_3: false,
 		sticky_offset_3: 0,
@@ -141,14 +144,23 @@ Component({
 			this.createSelectorQuery().select("#__interval").boundingClientRect((__interval) => {
 				this.data.interval_height = __interval.height
 				this.data.sticky_offset = this.data.interval_height
+				this.setData({
+					interval_height:this.data.interval_height
+				})
 			}).exec();
 			this.createSelectorQuery().select("#__interval_2").boundingClientRect((__interval) => {
 				this.data.interval_height_2 = __interval.height
 				this.data.sticky_offset_2 = this.data.interval_height + this.data.interval_height_2
+				this.setData({
+					interval_height_2:this.data.interval_height_2
+				})
 			}).exec();
 			this.createSelectorQuery().select("#__interval_3").boundingClientRect((__interval) => {
 				this.data.interval_height_3 = __interval.height
 				this.data.sticky_offset_3 = this.data.interval_height + this.data.interval_height_2 + this.data.interval_height_3
+				this.setData({
+					interval_height_3:this.data.interval_height_3
+				})
 			}).exec();
 			this.createSelectorQuery().select("#__sticky").boundingClientRect((__sticky) => {
 				this.data.sticky_height = __sticky.height
